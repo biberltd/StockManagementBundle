@@ -17,7 +17,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.2"
+        "php": ">=5.3.2",
+	"biberltd/logbundle": "dev-master"
     },
     "autoload": {
         "psr-0": { "BiberLtd\\StockManagementBundle": "" }
