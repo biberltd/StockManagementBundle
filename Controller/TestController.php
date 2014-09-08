@@ -18,7 +18,7 @@
  *
  */
 
-namespace BiberLtd\Core\Bundles\StockManagementBundle\Controller;
+namespace BiberLtd\Bundle\StockManagementBundle\Controller;
 use BiberLtd\Core\CoreController;
 
 

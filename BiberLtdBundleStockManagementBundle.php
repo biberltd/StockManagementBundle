@@ -1,11 +1,11 @@
 <?php
 
-namespace BiberLtd\Core\Bundles\StockManagementBundle;
+namespace BiberLtd\Bundle\StockManagementBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class BiberLtdCoreBundlesStockManagementBundle extends Bundle
+class BiberLtdBundleStockManagementBundle extends Bundle
 {
 
 }

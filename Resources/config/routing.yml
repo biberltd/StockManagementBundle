@@ -1,3 +1,3 @@
 biberltd_core_stock_management_manage:
     pattern:  /stock
-    defaults: { _controller: BiberLtdCoreBundlesStockManagementBundle:Test:test }
+    defaults: { _controller: BiberLtdBundleStockManagementBundle:Test:test }

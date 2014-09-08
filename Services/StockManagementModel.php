@@ -20,18 +20,18 @@
  * @use         Biberltd\Core\Services
  * @use         Biberltd\Core\CoreModel
  * @use         Biberltd\Core\Services\Encryption
- * @use         BiberLtd\Core\Bundles\StockManagementModel\Entity
- * @use         BiberLtd\Core\Bundles\StockManagementModel\Services
+ * @use         BiberLtd\Bundle\StockManagementModel\Entity
+ * @use         BiberLtd\Bundle\StockManagementModel\Services
  *
  */
 
-namespace BiberLtd\Core\Bundles\StockManagementBundle\Services;
+namespace BiberLtd\Bundle\StockManagementBundle\Services;
 
 /** Extends CoreModel */
 use BiberLtd\Core\CoreModel;
 /** Entities to be used */
-use BiberLtd\Core\Bundles\StockManagementBundle\Entity as BundleEntity;
-use BiberLtd\Core\Bundles\ProductManagementBundle\Entity as ProductEntity;
+use BiberLtd\Bundle\StockManagementBundle\Entity as BundleEntity;
+use BiberLtd\Bundle\ProductManagementBundle\Entity as ProductEntity;
 /** Core Service */
 use BiberLtd\Core\Services as CoreServices;
 use BiberLtd\Core\Exceptions as CoreExceptions;

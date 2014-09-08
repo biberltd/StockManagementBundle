@@ -1,6 +1,6 @@
 <?php
 
-namespace BiberLtd\Core\Bundles\StockManagementBundle\DependencyInjection;
+namespace BiberLtd\Bundle\StockManagementBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
