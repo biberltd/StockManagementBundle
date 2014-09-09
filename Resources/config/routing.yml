@@ -1,0 +1,3 @@
+biber_ltd_stock_management_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: BiberLtdStockManagementBundle:Default:index }

@@ -1,0 +1,7 @@
+parameters:
+#    biber_ltd_stock_management.example.class: BiberLtd\Bundle\StockManagementBundle\Example
+
+services:
+#    biber_ltd_stock_management.example:
+#        class: %biber_ltd_stock_management.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
