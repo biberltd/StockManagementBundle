@@ -1,7 +1,7 @@
 <?php
-namespace BiberLtd\Core\Bundles\StockManagementBundle\Entity;
+namespace BiberLtd\Bundle\StockManagementBundle\Entity;
 use Doctrine\ORM\Mapping AS ORM;
-use BiberLtd\Core\CoreEntity;
+use BiberLtd\Bundle\CoreBundle\CoreEntity;
 /** 
  * @ORM\Entity
  * @ORM\Table(

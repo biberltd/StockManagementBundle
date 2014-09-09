@@ -67,7 +67,7 @@
       </orm-attributes>
     </entity>
     <orm-attributes>
-      <attribute name="namespace">BiberLtd\Core\Bundles\StockManagementBundle\Entity</attribute>
+      <attribute name="namespace">BiberLtd\Bundle\StockManagementBundle\Entity</attribute>
       <attribute name="filename-format">entity-name-only</attribute>
       <attribute name="file-suffix">without-suffix</attribute>
     </orm-attributes>

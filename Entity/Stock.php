@@ -1,7 +1,7 @@
 <?php
-namespace BiberLtd\Core\Bundles\StockManagementBundle\Entity;
+namespace BiberLtd\Bundle\StockManagementBundle\Entity;
 use Doctrine\ORM\Mapping AS ORM;
-use BiberLtd\Core\CoreEntity;
+use BiberLtd\Bundle\CoreBundle\CoreEntity;
 /** 
  * @ORM\Entity
  * @ORM\Table(
@@ -68,13 +68,13 @@ class Stock extends CoreEntity
     private $discount_price;
 
     /** 
-     * @ORM\ManyToOne(targetEntity="BiberLtd\Core\Bundles\ProductManagementBundle\Entity\Product")
+     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\ProductManagementBundle\Entity\Product")
      * @ORM\JoinColumn(name="product", referencedColumnName="id", onDelete="CASCADE")
      */
     private $product;
 
     /** 
-     * @ORM\ManyToOne(targetEntity="BiberLtd\Core\Bundles\StockManagementBundle\Entity\Supplier")
+     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\StockManagementBundle\Entity\Supplier")
      * @ORM\JoinColumn(name="supplier", referencedColumnName="id")
      */
     private $supplier;
