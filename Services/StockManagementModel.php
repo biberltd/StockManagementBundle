@@ -1311,13 +1311,21 @@ class StockManagementModel extends CoreModel{
      */
     public function listStockAttributeValuesOfProduct($product, $filter = null, $sortOrder = null, $limit = null, $queryStr = null){
         $product = $this->validateAndGetProduct($product);
+        $stockResponse = $this->listStocksOfProduct($product);
+        if ($stockResponse['error']) {
+            return $stockResponse;
+        }
+        foreach ($stockResponse['result']['set'] as $stock) {
+            $stockIds[] =$stock->getId();
+        }
+        unset($stockResponse,$stock);
         $filter = array();
         $filter[] = array(
             'glue' => 'and',
             'condition' => array(
                 array(
                     'glue' => 'and',
-                    'condition' => array('column' => $this->entity['stock_attribute_value']['alias'] . '.stock', 'comparison' => '=', 'value' => $product->getId()),
+                    'condition' => array('column' => $this->entity['stock_attribute_value']['alias'] . '.stock', 'comparison' => 'in', 'value' => $stockIds),
                 )
             )
         );
@@ -1962,10 +1970,10 @@ class StockManagementModel extends CoreModel{
      * @return          object          BiberLtd\Core\Bundles\ProductManagementBundle\Entity\Product
      */
     private function validateAndGetProduct($product){
-        if (!is_numeric($product) && !is_string($product) && !$product instanceof BundleEntity\Product) {
+        if (!is_numeric($product) && !is_string($product) && !$product instanceof ProductEntity\Product) {
             return $this->createException('InvalidParameter', '$product parameter must hold BiberLtd\\Core\\Bundles\\ProductManagementBundle\\Entity\\Product Entity, string representing url_key or sku, or integer representing database row id', 'msg.error.invalid.parameter.product');
         }
-        if ($product instanceof BundleEntity\Product) {
+        if ($product instanceof ProductEntity\Product) {
             return $product;
         }
         $pModel = $this->kernel->getContainer()->get('productmanagement.model');
@@ -2060,7 +2068,7 @@ class StockManagementModel extends CoreModel{
  * A insertSupplier()
  * A insertSuppliers()
  * A updateSupplier()
- * A updateSuppliers() 
+ * A updateSuppliers()
  * **************************************
  * v1.0.0                      Said İmamoğlu
  * 19.03.2014
