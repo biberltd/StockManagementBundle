@@ -14,8 +14,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.0.4
- * @date        22.05.2014
+ * @version     1.0.7
+ * @date        12.12.2014
  *
  * @use         Biberltd\Core\Services
  * @use         Biberltd\Core\CoreModel
@@ -1294,8 +1294,8 @@ class StockManagementModel extends CoreModel{
      * @name            listStockAttributeValuesOfProduct ()
      *                  List stock attribute values of product from database based on a variety of conditions.
      *
-     * @since           1.0.5
-     * @version         1.0.5
+     * @since           1.0.7
+     * @version         1.0.7
      * @author          Said İmamoğlu
      *
      * @use             $this->createException()
@@ -2037,6 +2037,33 @@ class StockManagementModel extends CoreModel{
 
 /**
  * Change Log
+ * **************************************
+ * v1.0.7                      Can Berkol
+ * 12.12.2014
+ * **************************************
+ * A listStockAttributeValuesOfProduct()
+ * **************************************
+ * v1.0.6                      Can Berkol
+ * 10.12.2014
+ * **************************************
+ * A validateAndGetProduct()
+ * A validateAndGetLocale()
+ * **************************************
+ * v1.0.5                      Can Berkol
+ * 17.11.2014
+ * **************************************
+ * A deleteAllAttributeValuesOfStockAttribute()
+ * A doesStockAttributeValueExist()
+ * A getAttributeValueOfStock()
+ * A insertStockAttributeValue()
+ * A insertStockAttributeValues()
+ * A listStockAttributeValues()
+ * A listStockAttributeValuesOfStock()
+ * A updateStockAttributeValue()
+ * A updateStockAttributeValues()
+ * A validateAndGetStock()
+ * A validateAndGetProductAttribute()
+ *
  * **************************************
  * v1.0.4                      Can Berkol
  * 22.05.2014
