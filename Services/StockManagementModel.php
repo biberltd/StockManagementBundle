@@ -39,9 +39,50 @@ use BiberLtd\Bundle\CoreBundle\Exceptions as CoreExceptions;
 class StockManagementModel extends CoreModel{
     public $entity = array(
         'stock' => array('name' => 'StockManagementBundle:Stock', 'alias' => 'st'),
+        'stock_attribute_value' => array('name' => 'StockManagementBundle:StockAttributeValue', 'alias' => 'stav'),
         'supplier' => array('name' => 'StockManagementBundle:Supplier', 'alias' => 'su'),
+        'product_attribute' => array('name' => 'ProductManagementBundle:ProductAttribute', 'alias' => 'pa'),
     );
 
+    /**
+     * @name            deleteAllAttributeValuesOfStockAttribute ()
+     *                  Deletes all attribute values of a product by attribute.
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     * @author          Can Berkol
+     *
+     * @use             $this->resetResponse();
+     * @use             $this->validateAndGetStock()
+     * @use             $this->validateAndGetProductAttribute()
+     *
+     * @param           mixed           $attribute
+     * @param           mixed           $stock
+     *
+     * @return          array           $response
+     */
+    public function deleteAllAttributeValuesOfStockAttribute($attribute, $stock){
+        $this->resetResponse();
+        /** Parameter must be an array */
+        $attribute = $this->validateAndGetProductAttribute($attribute);
+        $product = $this->validateAndGetStockt($stock);
+        $qStr = 'DELETE FROM ' . $this->entity['stock_attribute_value']['name'] . ' ' . $this->entity['stock_attribute_value']['alias']
+            . ' WHERE ' . $this->entity['stock_attribute_value']['alias'] . '.attribute = ' . $attribute->getId()
+            . ' AND ' . $this->entity['stock_attribute_value']['alias'] . '.stock = ' . $stock->getId();
+        $query = $this->em->createQuery($qStr);
+        $query->getResult();
+        $this->response = array(
+            'rowCount' => 0,
+            'result' => array(
+                'set' => null,
+                'total_rows' => 0,
+                'last_insert_id' => null,
+            ),
+            'error' => false,
+            'code' => 'msg.success.db.delete',
+        );
+        return $this->response;
+    }
     /**
      * @name        deleteStock ()
      * Deletes an existing item from database.
@@ -203,11 +244,11 @@ class StockManagementModel extends CoreModel{
                 $unique[$id] = $entry->getId();
             }
         }
-
         $total_rows = count($stocks);
 
         if ($total_rows < 1) {
             $this->response['code'] = 'err.db.entry.notexist';
+            $this->response['error'] = true;
             return $this->response;
         }
         $newCollection = array();
@@ -279,7 +320,7 @@ class StockManagementModel extends CoreModel{
         return $this->listStocks($filter, $sortOrder, $limit);
     }
     /**
-     * @name            listStocksOfProduct()
+     * @name            listStocksOfProductFromSupplier()
      *                  Lists stock data from database with given params.
      *
      * @author          Can Berkol
@@ -317,6 +358,78 @@ class StockManagementModel extends CoreModel{
             )
         );
         return $this->listStocks($filter, $sortOrder, $limit);
+    }
+    /**
+     * @name            getAttributeValueOfStock()
+     *                  Returns a product's requested attribute's value in given locale.
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     * @author          Can Berkol
+     *
+     * @use             $this->createException()
+     * @use             $this->resetResponse()
+     * @use             $this->validateAndGetLocale()
+     * @use             $this->validateAndGetProduct()
+     * @use             $this->validateAndGetProductAttribute()
+     *
+     * @param           mixed           $attribute  url_key, id, entity
+     * @param           mixed           $stock    id, sku
+     * @param           mixed           $language   iso code, entity, id
+     *
+     * @return          mixed           $response
+     */
+    public function getAttributeValueOfStock($attribute, $stock, $language){
+        $this->resetResponse();
+        $responseAttribute = $this->validateAndGetProductAttribute($attribute);
+        if ($responseAttribute['error']) {
+            return $responseAttribute;
+        }
+        $attribute = $responseAttribute['result']['set'];
+        unset($responseAttribute);
+        $responseStock = $this->validateAndGetStock($stock);
+        if ($responseStock['error']) {
+            return $responseStock;
+        }
+        $stock = $responseStock['result']['set'];
+        $responseLocale = $this->validateAndGetLocale($language);
+        if ($responseLocale['error']) {
+            return $responseLocale;
+        }
+        $language = $responseLocale['result']['set'];
+
+        $q_str = 'SELECT DISTINCT ' . $this->entity['stock_attribute_value']['alias'] . ', ' . $this->entity['product_attribute']['alias']
+            . ' FROM ' . $this->entity['stock_attribute_value']['name'] . ' ' . $this->entity['stock_attribute_value']['alias']
+            . ' JOIN ' . $this->entity['stock_attribute_value']['alias']   .'.attribute '. $this->entity['product_attribute']['alias']
+            . ' WHERE ' . $this->entity['stock_attribute_value']['alias'] . '.stock = ' . $stock->getId()
+            . ' AND ' . $this->entity['stock_attribute_value']['alias'] . '.language = ' . $language->getId()
+            . ' AND ' . $this->entity['stock_attribute_value']['alias'] . '.attribute = ' . $attribute->getId();
+
+        $query = $this->em->createQuery($q_str);
+        $query->setMaxResults(1);
+        $query->setFirstResult(0);
+
+        $result = $query->getResult();
+        $totalRows = count($result);
+        if ($totalRows < 1) {
+            $this->response['error'] = true;
+            $this->response['code'] = 'msg.error.db.attribute.value.notfound';
+            return $this->response;
+        }
+        /**
+         * Prepare & Return Response
+         */
+        $this->response = array(
+            'rowCount' => $this->response['rowCount'],
+            'result' => array(
+                'set' => $result[0],
+                'total_rows' => $totalRows,
+                'last_insert_id' => null,
+            ),
+            'error' => false,
+            'code' => 'msg.success.db.entry.exists',
+        );
+        return $this->response;
     }
     /**
      * @name        getStock ()
@@ -393,7 +506,48 @@ class StockManagementModel extends CoreModel{
         );
         return $this->response;
     }
-
+    /**
+     * @name            doesStockAtributeValueExist()
+     *                  Checks if entry exists in database.
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     *
+     * @author          Can Berkol
+     *
+     * @use             $this->getAttributeValueOfStock()
+     *
+     * @param           mixed       $attribute      id, url_key
+     * @param           mixed       $stock          id, url_key, sku
+     * @param           mixed       $language       id, iso_code, url_key
+     * @param           bool        $bypass         If set to true does not return response but only the result.
+     *
+     * @return          mixed       $response
+     */
+    public function doesStockAttributeValueExist($attribute, $stock, $language, $bypass = false){
+        $exist = false;
+        $response = $this->getAttributeValueOfStock($attribute, $stock, $language);
+        if (!$response['error']) {
+            $exist = true;
+        }
+        if ($bypass) {
+            return $exist;
+        }
+        /**
+         * Prepare & Return Response
+         */
+        $this->response = array(
+            'rowCount' => $this->response['rowCount'],
+            'result' => array(
+                'set' => $exist,
+                'total_rows' => 1,
+                'last_insert_id' => null,
+            ),
+            'error' => false,
+            'code' => 'msg.success.db.entry.exist',
+        );
+        return $this->response;
+    }
     /**
      * @name        doesStockExist ()
      * Checks if entry exists in database.
@@ -556,18 +710,18 @@ class StockManagementModel extends CoreModel{
     /**
      * @name            updateStock()
      * Updates single item. The item must be either a post data (array) or an entity
-     * 
+     *
      * @since           1.0.0
      * @version         1.0.0
      * @author          Said İmamoğlu
-     * 
+     *
      * @use             $this->resetResponse()
      * @use             $this->updateStocks()
-     * 
+     *
      * @param           mixed   $item     Entity or Entity id of a folder
-     * 
+     *
      * @return          array   $response
-     * 
+     *
      */
 
     public function updateStock($item){
@@ -577,24 +731,24 @@ class StockManagementModel extends CoreModel{
     /**
      * @name            updateStocks()
      *                  Updates one or more item details in database.
-     * 
+     *
      * @since           1.0.0
      * @version         1.0.4
      *
      * @author          Can Berkol
      * @author          Said İmamoğlu
-     * 
+     *
      * @use             $this->update_entities()
      * @use             $this->createException()
      * @use             $this->listStocks()
-     * 
-     * 
+     *
+     *
      * @throws          InvalidParameterException
-     * 
+     *
      * @param           array   $collection     Collection of item's entities or array of entity details.
-     * 
+     *
      * @return          array   $response
-     * 
+     *
      */
 
     public function updateStocks($collection)
@@ -860,7 +1014,55 @@ class StockManagementModel extends CoreModel{
         );
         return $this->response;
     }
+    /**
+     * @name            getStockAttributeValue ()
+     *                  Returns a StockAttributeValue Entry
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     * @author          Can Berkol
+     *
+     * @use             $this->createException()
+     * @use             $this->resetResponse()
+     *
+     * @param           integer         $id
+     *
+     * @return          mixed           $response
+     */
+    public function getStockAttributeValue($id){
+        $this->resetResponse();
+        if (!is_integer($id)) {
+            return $this->createException('InvalidParameter', '$id parameter must hold an integer value.', 'msg.error.invalid.parameter.id');
+        }
 
+        $result = $this->em->getRepository($this->entity['stock_attribute_value']['name'])
+            ->findOneBy(array('id' => $id));
+
+        $error = true;
+        $code = 'msg.error.db.entry.notexist';
+        $found = 0;
+        if($result instanceof BundleEntity\StockAttributeValue){
+            $error = false;
+            $code = 'msg.success.db.entity.exists';
+            $found = 1;
+        }
+        if($error){ $result = null; }
+        /**
+         * Prepare & Return Response
+         */
+        $this->response = array(
+            'rowCount' => $this->response['rowCount'],
+            'result' => array(
+                'set' => $result,
+                'total_rows' => $found,
+                'last_insert_id' => null,
+            ),
+            'error' => $error,
+            'code' => $code,
+        );
+
+        return $this->response;
+    }
     /**
      * @name        getSupplier ()
      * Returns details of a gallery.
@@ -936,7 +1138,192 @@ class StockManagementModel extends CoreModel{
         );
         return $this->response;
     }
+    /**
+     * @name            listStockAttributeValues ()
+     *                  List stock attribute values from database based on a variety of conditions.
+     *
+     * @since           1.0.5
+     * @version         1.0.
+     * @author          Can Berkol
+     *
+     * @use             $this->createException()
+     *
+     * @param           array $filter Multi-dimensional array
+     * @param           array $sortOrder Array
+     *                                      'column'            => 'asc|desc'
+     * @param           array $limit
+     *                                      start
+     *                                      count
+     *
+     * @param           string $queryStr If a custom query string needs to be defined.
+     *
+     * @return          array           $response
+     */
+    public function listStockAttributeValues($filter = null, $sortOrder = null, $limit = null, $queryStr = null){
+        $this->resetResponse();
+        if (!is_array($sortOrder) && !is_null($sortOrder)) {
+            return $this->createException('InvalidSortOrder', '', 'err.invalid.parameter.sortorder');
+        }
+        /**
+         * Add filter checks to below to set join_needed to true.
+         */
+        /**         * ************************************************** */
+        $order_str = '';
+        $where_str = '';
+        $group_str = '';
+        $filter_str = '';
 
+        /**
+         * Start creating the query.
+         *
+         * Note that if no custom select query is provided we will use the below query as a start.
+         */
+        if (is_null($queryStr)) {
+            $queryStr = 'SELECT ' . $this->entity['stock_attribute_value']['alias']
+                . ' FROM ' . $this->entity['stock_attribute_value']['name'] . ' ' . $this->entity['stock_attribute_value']['alias'];
+        }
+        /**
+         * Prepare ORDER BY section of query.
+         */
+        if ($sortOrder != null) {
+            foreach ($sortOrder as $column => $direction) {
+                switch ($column) {
+                    case 'id':
+                    case 'sort_order':
+                    case 'date_added':
+                        $column = $this->entity['stock_attribute_value']['alias'] . '.' . $column;
+                        break;
+                }
+                $order_str .= ' ' . $column . ' ' . strtoupper($direction) . ', ';
+            }
+            $order_str = rtrim($order_str, ', ');
+            $order_str = ' ORDER BY ' . $order_str . ' ';
+        }
+
+        /**
+         * Prepare WHERE section of query.
+         */
+        if ($filter != null) {
+            $filter_str = $this->prepareWhere($filter);
+            $where_str .= ' WHERE ' . $filter_str;
+        }
+
+        $queryStr .= $where_str . $group_str . $order_str;
+
+        $query = $this->em->createQuery($queryStr);
+
+        /**
+         * Prepare LIMIT section of query
+         */
+        if ($limit != null) {
+            if (isset($limit['start']) && isset($limit['count'])) {
+                /** If limit is set */
+                $query->setFirstResult($limit['start']);
+                $query->setMaxResults($limit['count']);
+            } else {
+                new CoreExceptions\InvalidLimitException($this->kernel, '');
+            }
+        }
+        /**
+         * Prepare & Return Response
+         */
+        $result = $query->getResult();
+
+        $attributes = array();
+        $unique = array();
+        foreach ($result as $entry) {
+            $id = $entry->getId();
+            if (!isset($unique[$id])) {
+                $attributes[] = $entry;
+                $unique[$id] = $entry->getId();
+            }
+        }
+        unset($unique);
+        $totalRows = count($attributes);
+        if ($totalRows < 1) {
+            $this->response['code'] = 'err.db.entry.notexist';
+            return $this->response;
+        }
+        $this->response = array(
+            'rowCount' => $this->response['rowCount'],
+            'result' => array(
+                'set' => $attributes,
+                'total_rows' => $totalRows,
+                'last_insert_id' => null,
+            ),
+            'error' => false,
+            'code' => 'scc.db.entry.exist',
+        );
+        return $this->response;
+    }
+    /**
+     * @name            listStockAttributeValuesOfStock ()
+     *                  List stock attribute values of stock from database based on a variety of conditions.
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     * @author          Said İmamoğlu
+     *
+     * @use             $this->createException()
+     *
+     * @param           array $stock
+     * @param           array $filter Multi-dimensional array
+     * @param           array $sortOrder Array
+     * @param           array $limit
+     *
+     * @param           string $queryStr If a custom query string needs to be defined.
+     *
+     * @return          array           $response
+     */
+    public function listStockAttributeValuesOfStock($stock, $filter = null, $sortOrder = null, $limit = null, $queryStr = null){
+        $stock = $this->validateAndGetStock($stock);
+        $filter = array();
+        $filter[] = array(
+            'glue' => 'and',
+            'condition' => array(
+                array(
+                    'glue' => 'and',
+                    'condition' => array('column' => $this->entity['stock_attribute_value']['alias'] . '.stock', 'comparison' => '=', 'value' => $stock->getId()),
+                )
+            )
+        );
+        return $this->listStockAttributeValues($filter);
+
+    }
+    /**
+     * @name            listStockAttributeValuesOfProduct ()
+     *                  List stock attribute values of product from database based on a variety of conditions.
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     * @author          Said İmamoğlu
+     *
+     * @use             $this->createException()
+     *
+     * @param           array $product
+     * @param           array $filter Multi-dimensional array
+     * @param           array $sortOrder Array
+     * @param           array $limit
+     *
+     * @param           string $queryStr If a custom query string needs to be defined.
+     *
+     * @return          array           $response
+     */
+    public function listStockAttributeValuesOfProduct($product, $filter = null, $sortOrder = null, $limit = null, $queryStr = null){
+        $product = $this->validateAndGetProduct($product);
+        $filter = array();
+        $filter[] = array(
+            'glue' => 'and',
+            'condition' => array(
+                array(
+                    'glue' => 'and',
+                    'condition' => array('column' => $this->entity['stock_attribute_value']['alias'] . '.stock', 'comparison' => '=', 'value' => $product->getId()),
+                )
+            )
+        );
+        return $this->listStockAttributeValues($filter);
+
+    }
     /**
      * @name        doesSupplierExist ()
      * Checks if entry exists in database.
@@ -987,9 +1374,128 @@ class StockManagementModel extends CoreModel{
         );
         return $this->response;
     }
+    /**
+     * @name            insertStockAttributeValue()
+     *                  Inserts one stock attribute value into database.
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     * @author          Can Berkol
+     *
+     * @use             $this->insertProductAttributeValues()
+     *
+     * @param           mixed           $attrVal
+     *
+     * @return          array           $response
+     */
+    public function insertStockAttributeValue($attrVal){
+        return $this->insertStockAttributeValues(array($attrVal));
+    }
 
     /**
-     * @name        insertSupplier ()
+     * @name            insertStockAttributeValues()
+     *                  Inserts one or more stock attribute values into database.
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     * @author          Can Berkol
+     *
+     * @use             $this->createException()
+     * @use             $this->insertProductAttributeLocalization()
+     *
+     * @param           array           $collection             Collection of entities or post data.
+     *
+     * @return          array           $response
+     */
+    public function insertStockAttributeValues($collection){
+        $this->resetResponse();
+        /** Parameter must be an array */
+        if (!is_array($collection)) {
+            return $this->createException('InvalidParameter', 'Array', 'msg.err.invalid.parameter.collection');
+        }
+        $countInserts = 0;
+        $insertedItems = array();
+        foreach ($collection as $data) {
+            if ($data instanceof BundleEntity\StockAttributeValue) {
+                $entity = $data;
+                $this->em->persist($entity);
+                $insertedItems[] = $entity;
+                $countInserts++;
+            } else if (is_object($data)) {
+                $entity = new BundleEntity\StockAttributeValue;
+                if (isset($data->id)) {
+                    unset($data->id);
+                }
+                foreach ($data as $column => $value) {
+                    $set = 'set' . $this->translateColumnName($column);
+                    switch ($column) {
+                        case 'language':
+                            $lModel = $this->kernel->getContainer()->get('multilanguagesupport.model');
+                            $response = $lModel->getLanguage($value, 'id');
+                            if (!$response['error']) {
+                                $entity->$set($response['result']['set']);
+                            } else {
+                                $response = $lModel->getLanguage($value, 'iso_code');
+                                if (!$response['error']) {
+                                    $entity->$set($response['result']['set']);
+                                } else {
+                                    new CoreExceptions\EntityDoesNotExist($this->kernel, $value);
+                                }
+                            }
+                            unset($response, $sModel);
+                            break;
+                        case 'attribute':
+                            $pModel = $this->kernel->getContainer()->get('productmanagement.model');
+                            $response = $pModel->getProductAttribute($value, 'id');
+                            if (!$response['error']) {
+                                $entity->$set($response['result']['set']);
+                            } else {
+                                new CoreExceptions\EntityDoesNotExist($this->kernel, $value);
+                            }
+                            unset($response, $sModel);
+                            break;
+                        case 'stock':
+                            $response = $this->getStock($value, 'id');
+                            if (!$response['error']) {
+                                $entity->$set($response['result']['set']);
+                            } else {
+                                new CoreExceptions\EntityDoesNotExist($this->kernel, $value);
+                            }
+                            unset($response, $sModel);
+                            break;
+                        default:
+                            $entity->$set($value);
+                            break;
+                    }
+                }
+                $this->em->persist($entity);
+                $insertedItems[] = $entity;
+
+                $countInserts++;
+            } else {
+                new CoreExceptions\InvalidDataException($this->kernel);
+            }
+        }
+        if ($countInserts > 0) {
+            $this->em->flush();
+        }
+        /**
+         * Prepare & Return Response
+         */
+        $this->response = array(
+            'rowCount' => $this->response['rowCount'],
+            'result' => array(
+                'set' => $insertedItems,
+                'total_rows' => $countInserts,
+                'last_insert_id' => $entity->getId(),
+            ),
+            'error' => false,
+            'code' => 'scc.db.insert.done',
+        );
+        return $this->response;
+    }
+    /**
+     * @name            insertSupplier ()
      * Inserts one or more item into database.
      *
      * @since           1.0.1
@@ -1070,7 +1576,137 @@ class StockManagementModel extends CoreModel{
         );
         return $this->response;
     }
+    /**
+     * @name            updateStockAttributeValue ()
+     *                  Updates single stock attribute value. The data must be either a post data (array) or an entity
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     * @author          Can Berkol
+     *
+     * @use             $this->updateStockAttributeValues()
+     *
+     * @param           mixed $data entity or post data
+     *
+     * @return          mixed           $response
+     */
+    public function updateStockAttributeValue($data)
+    {
+        return $this->updateStockAttributeValues(array($data));
+    }
 
+    /**
+     * @name            updateStockAttributeValues ()
+     *                  Updates one or more stock details in database.
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     * @author          Can Berkol
+     *
+     * @use             $this->createException()
+     *
+     * @param           array $collection Collection of Product entities or array of entity details.
+     *
+     * @return          array           $response
+     */
+    public function updateStockAttributeValues($collection)
+    {
+        $this->resetResponse();
+        /** Parameter must be an array */
+        if (!is_array($collection)) {
+            return $this->createException('InvalidParameter', 'Array', 'err.invalid.parameter.collection');
+        }
+        $countUpdates = 0;
+        $updatedItems = array();
+        foreach ($collection as $data) {
+            if ($data instanceof BundleEntity\StockAttributeValue) {
+                $entity = $data;
+                $this->em->persist($entity);
+                $updatedItems[] = $entity;
+                $countUpdates++;
+            } else if (is_object($data)) {
+                if (!property_exists($data, 'id') || !is_numeric($data->id)) {
+                    return $this->createException('InvalidParameter', 'Each data must contain a valid identifier id, integer', 'err.invalid.parameter.collection');
+                }
+                if (!property_exists($data, 'date_updated')) {
+                    $data->date_updated = new \DateTime('now', new \DateTimeZone($this->kernel->getContainer()->getParameter('app_timezone')));
+                }
+                if (property_exists($data, 'date_added')) {
+                    unset($data->date_added);
+                }
+                $response = $this->getStockAttributeValue($data->id, 'id');
+                if ($response['error']) {
+                    return $this->createException('EntityDoesNotExist', 'ProductAttribute with id ' . $data->id, 'err.invalid.entity');
+                }
+                $oldEntity = $response['result']['set'];
+
+                foreach ($data as $column => $value) {
+                    $set = 'set' . $this->translateColumnName($column);
+                    switch ($column) {
+                        case 'attribute':
+                            $pModel = $this->kernel->getContainer()->get('productManagement.model');
+                            $response = $pModel->getProductAttribute($value, 'id');
+                            if (!$response['error']) {
+                                $oldEntity->$set($response['result']['set']);
+                            } else {
+                                new CoreExceptions\EntityDoesNotExistException($this->kernel, $value);
+                            }
+                            unset($response, $pModel);
+                            break;
+                        case 'language':
+                            $lModel = $this->kernel->getContainer()->get('multilanguagesupport.model');
+                            $response = $lModel->getLanguage($value, 'id');
+                            if (!$response['error']) {
+                                $oldEntity->$set($response['result']['set']);
+                            } else {
+                                new CoreExceptions\EntityDoesNotExistException($this->kernel, $value);
+                            }
+                            unset($response, $lModel);
+                            break;
+                        case 'product':
+                            $pModel = $this->kernel->getContainer()->get('productManagement.model');
+                            $response = $pModel->getStock($value, 'id');
+                            if (!$response['error']) {
+                                $oldEntity->$set($response['result']['set']);
+                            } else {
+                                new CoreExceptions\EntityDoesNotExistException($this->kernel, $value);
+                            }
+                            unset($response, $pModel);
+                            break;
+                        case 'id':
+                            break;
+                        default:
+                            $oldEntity->$set($value);
+                            break;
+                    }
+                    if ($oldEntity->isModified()) {
+                        $this->em->persist($oldEntity);
+                        $countUpdates++;
+                        $updatedItems[] = $oldEntity;
+                    }
+                }
+            } else {
+                new CoreExceptions\InvalidDataException($this->kernel);
+            }
+        }
+        if ($countUpdates > 0) {
+            $this->em->flush();
+        }
+        /**
+         * Prepare & Return Response
+         */
+        $this->response = array(
+            'rowCount' => $this->response['rowCount'],
+            'result' => array(
+                'set' => $updatedItems,
+                'total_rows' => $countUpdates,
+                'last_insert_id' => null,
+            ),
+            'error' => false,
+            'code' => 'scc.db.update.done',
+        );
+        return $this->response;
+    }
     /**
      * @name            updateSupplier()
      * Updates single item. The item must be either a post data (array) or an entity
@@ -1232,7 +1868,163 @@ class StockManagementModel extends CoreModel{
         );
         return $this->response;
     }
+    /**
+     * @name            validateAndGetStock()
+     *                  Validates $stock parameter and returns BiberLtd\Core\Bundles\StockManagementBundle\Entity\Stock if found in database.
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     * @author          Can Berkol
+     *
+     * @use             $this->createException()
+     * @use             $this->getStock()
+     *
+     * @param           mixed           $stock
+     *
+     * @return          object          BiberLtd\Core\Bundles\StockManagementBundle\Entity\Stock
+     */
+    private function validateAndGetStock($stock){
+        if (!is_numeric($stock) && !is_string($stock) && !$stock instanceof BundleEntity\Stock) {
+            return $this->createException('InvalidParameter', '$stock parameter must hold BiberLtd\\Core\\Bundles\\StockManagementBundle\\Entity\\Stock Entity, string representing url_key or sku, or integer representing database row id', 'msg.error.invalid.parameter.product');
+        }
+        if ($stock instanceof BundleEntity\Stock) {
+            return $stock;
+        }
+        if (is_numeric($stock)) {
+            $response = $this->getStock($stock, 'id');
+            if ($response['error']) {
+                return $response;
+            }
+            $stock = $response['result']['set'];
+        } else if (is_string($stock)) {
+            $response = $this->getStock($stock, 'sku');
+            if ($response['error']) {
+                $response = $this->getStock($stock, 'supplier_sku');
+                if ($response['error']) {
+                    return $response;
+                }
+            }
+            $stock = $response['result']['set'];
+        }
 
+        return $stock;
+    }
+
+    /**
+     * @name            validateAndGetLocale()
+     *                  Validates $locale parameter and returns BiberLtd\Core\Bundles\MultiLanguageSupport\Entity\Language if found in database.
+     *
+     * @since           1.0.6
+     * @version         1.0.6
+     * @author          Said İmamoğlu
+     *
+     * @use             $this->createException()
+     *
+     * @param           mixed           $locale
+     *
+     * @return          object          BiberLtd\Core\Bundles\ProductManagementBundle\Entity\Language
+     */
+    private function validateAndGetLocale($locale){
+        if (!is_string($locale) && !is_numeric($locale) && !$locale instanceof MLSEntity\Language) {
+            return $this->createException('InvalidLanguageException', 'You have provided "'.gettype($locale).'" value in $locale parameter.', 'msg.error.invalid.parameter.locale');
+        }
+        $mlsModel = $this->kernel->getContainer()->get('multilanguagesupport.model');
+
+        /** If no entity is provided as product we need to check if it does exist */
+        if (is_numeric($locale)) {
+            $response = $mlsModel->getLanguage($locale, 'id');
+            if ($response['error']) {
+                return $response;
+            }
+            $locale = $response['result']['set'];
+        } else if (is_string($locale)) {
+            $response = $mlsModel->getLanguage($locale, 'iso_code');
+            if ($response['error']) {
+                return $response;
+            }
+            $locale = $response['result']['set'];
+        }
+        return $locale;
+    }
+    /**
+     * @name            validateAndGetProduct()
+     *                  Validates $product parameter and returns BiberLtd\Core\Bundles\ProductManagementBundle\Entity\Product if found in database.
+     *
+     * @since           1.0.6
+     * @version         1.0.6
+     * @author          Said İmamoğlu
+     *
+     * @use             $this->createException()
+     * @use             $this->getProduct()
+     *
+     * @param           mixed           $product
+     *
+     * @return          object          BiberLtd\Core\Bundles\ProductManagementBundle\Entity\Product
+     */
+    private function validateAndGetProduct($product){
+        if (!is_numeric($product) && !is_string($product) && !$product instanceof BundleEntity\Product) {
+            return $this->createException('InvalidParameter', '$product parameter must hold BiberLtd\\Core\\Bundles\\ProductManagementBundle\\Entity\\Product Entity, string representing url_key or sku, or integer representing database row id', 'msg.error.invalid.parameter.product');
+        }
+        if ($product instanceof BundleEntity\Product) {
+            return $product;
+        }
+        $pModel = $this->kernel->getContainer()->get('productmanagement.model');
+        if (is_numeric($product)) {
+            $response = $pModel->getProduct($product, 'id');
+            if ($response['error']) {
+                return $response;
+            }
+            $product = $response['result']['set'];
+        } else if (is_string($product)) {
+            $response = $pModel->getProduct($product, 'sku');
+            if ($response['error']) {
+                $response = $pModel->getProduct($product, 'url_key');
+                if ($response['error']) {
+                    return $response;
+                }
+            }
+            $product = $response['result']['set'];
+        }
+
+        return $product;
+    }
+    /**
+     * @name            validateAndGetProductAttribute()
+     *                  Validates $attribute parameter and returns BiberLtd\Core\Bundles\ProductManagementBundle\Entity\ProductAttribute if found in database.
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     * @author          Can Berkol
+     *
+     * @use             $this->createException()
+     * @use             $this->getProductAttribute()
+     *
+     * @param           mixed           $attribute
+     *
+     * @return          object          BiberLtd\Core\Bundles\ProductManagementBundle\Entity\ProductAttribute
+     */
+    private function validateAndGetProductAttribute($attribute){
+        $pModel = $this->kernel->getContainer()->get('productmanagement.model');
+        if (!is_numeric($attribute) && !$attribute instanceof ProductEntity\ProductAttribute) {
+            return $this->createException('InvalidParameter', '$attribute parameter must hold BiberLtd\\Core\\Bundles\\ProductManagementBundle\\Entity\\ProductAttribute Entity or integer representing database row id', 'msg.error.invalid.parameter.product.attribute');
+        }
+        /** If no entity is provided as product we need to check if it does exist */
+        if (is_numeric($attribute)) {
+            $response = $pModel->getProductAttribute($attribute, 'id');
+            if ($response['error']) {
+                return $response;
+            }
+            $attribute = $response['result']['set'];
+        }
+        else if (is_string($attribute)) {
+            $response = $pModel->getProductAttribute($attribute, 'url_key');
+            if ($response['error']) {
+                return $response;
+            }
+            $attribute = $response['result']['set'];
+        }
+        return $attribute;
+    }
 }
 
 /**
