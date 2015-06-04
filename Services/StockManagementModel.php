@@ -14,27 +14,32 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
+<<<<<<< HEAD
  * @version     1.0.7
  * @date        12.12.2014
+=======
+ * @version     1.0.5
+ * @date        17.11.2014
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
  *
  * @use         Biberltd\Core\Services
  * @use         Biberltd\Core\CoreModel
  * @use         Biberltd\Core\Services\Encryption
- * @use         BiberLtd\Bundle\StockManagementModel\Entity
- * @use         BiberLtd\Bundle\StockManagementModel\Services
+ * @use         BiberLtd\Core\Bundles\StockManagementModel\Entity
+ * @use         BiberLtd\Core\Bundles\StockManagementModel\Services
  *
  */
 
-namespace BiberLtd\Bundle\StockManagementBundle\Services;
+namespace BiberLtd\Core\Bundles\StockManagementBundle\Services;
 
 /** Extends CoreModel */
-use BiberLtd\Bundle\CoreBundle\CoreModel;
+use BiberLtd\Core\CoreModel;
 /** Entities to be used */
-use BiberLtd\Bundle\StockManagementBundle\Entity as BundleEntity;
-use BiberLtd\Bundle\ProductManagementBundle\Entity as ProductEntity;
+use BiberLtd\Core\Bundles\StockManagementBundle\Entity as BundleEntity;
+use BiberLtd\Core\Bundles\ProductManagementBundle\Entity as ProductEntity;
 /** Core Service */
-use BiberLtd\Bundle\CoreBundle\Services as CoreServices;
-use BiberLtd\Bundle\CoreBundle\Exceptions as CoreExceptions;
+use BiberLtd\Core\Services as CoreServices;
+use BiberLtd\Core\Exceptions as CoreExceptions;
 
 class StockManagementModel extends CoreModel{
     public $entity = array(
@@ -374,11 +379,16 @@ class StockManagementModel extends CoreModel{
      * @use             $this->validateAndGetProductAttribute()
      *
      * @param           mixed           $attribute  url_key, id, entity
+<<<<<<< HEAD
      * @param           mixed           $stock    id, sku
+=======
+     * @param           mixed           $product    id, sku
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
      * @param           mixed           $language   iso code, entity, id
      *
      * @return          mixed           $response
      */
+<<<<<<< HEAD
     public function getAttributeValueOfStock($attribute, $stock, $language){
         $this->resetResponse();
         $responseAttribute = $this->validateAndGetProductAttribute($attribute);
@@ -402,13 +412,28 @@ class StockManagementModel extends CoreModel{
             . ' FROM ' . $this->entity['stock_attribute_value']['name'] . ' ' . $this->entity['stock_attribute_value']['alias']
             . ' JOIN ' . $this->entity['stock_attribute_value']['alias']   .'.attribute '. $this->entity['product_attribute']['alias']
             . ' WHERE ' . $this->entity['stock_attribute_value']['alias'] . '.stock = ' . $stock->getId()
+=======
+    public function getAttributeValueOfStock($attribute, $product, $language){
+        $this->resetResponse();
+        $attribute = $this->validateAndGetProductAttribute($attribute);
+        $product = $this->validateAndGetProduct($product);
+        $language = $this->validateAndGetLocale($language);
+
+        $q_str = 'SELECT DISTINCT ' . $this->entity['stock_attribute_value']['alias'] . ', ' . $this->entity['product_attribute']['alias']
+            . ' FROM ' . $this->entity['stock_attribute_value']['name'] . ' ' . $this->entity['product_attribute_values']['alias']
+            . ' JOIN ' . $this->entity['stock_attribute_value']['alias'] . '.attribute ' . $this->entity['product_attribute']['alias']
+            . ' WHERE ' . $this->entity['stock_attribute_value']['alias'] . '.product = ' . $product->getId()
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
             . ' AND ' . $this->entity['stock_attribute_value']['alias'] . '.language = ' . $language->getId()
             . ' AND ' . $this->entity['stock_attribute_value']['alias'] . '.attribute = ' . $attribute->getId();
 
         $query = $this->em->createQuery($q_str);
         $query->setMaxResults(1);
         $query->setFirstResult(0);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
         $result = $query->getResult();
         $totalRows = count($result);
         if ($totalRows < 1) {
@@ -1199,6 +1224,7 @@ class StockManagementModel extends CoreModel{
             $order_str = rtrim($order_str, ', ');
             $order_str = ' ORDER BY ' . $order_str . ' ';
         }
+<<<<<<< HEAD
 
         /**
          * Prepare WHERE section of query.
@@ -1331,6 +1357,98 @@ class StockManagementModel extends CoreModel{
         );
         return $this->listStockAttributeValues($filter);
 
+=======
+
+        /**
+         * Prepare WHERE section of query.
+         */
+        if ($filter != null) {
+            $filter_str = $this->prepareWhere($filter);
+            $where_str .= ' WHERE ' . $filter_str;
+        }
+
+        $queryStr .= $where_str . $group_str . $order_str;
+
+        $query = $this->em->createQuery($queryStr);
+
+        /**
+         * Prepare LIMIT section of query
+         */
+        if ($limit != null) {
+            if (isset($limit['start']) && isset($limit['count'])) {
+                /** If limit is set */
+                $query->setFirstResult($limit['start']);
+                $query->setMaxResults($limit['count']);
+            } else {
+                new CoreExceptions\InvalidLimitException($this->kernel, '');
+            }
+        }
+        /**
+         * Prepare & Return Response
+         */
+        $result = $query->getResult();
+
+        $attributes = array();
+        $unique = array();
+        foreach ($result as $entry) {
+            $id = $entry->getId();
+            if (!isset($unique[$id])) {
+                $attributes[] = $entry;
+                $unique[$id] = $entry->getId();
+            }
+        }
+        unset($unique);
+        $totalRows = count($attributes);
+        if ($totalRows < 1) {
+            $this->response['code'] = 'err.db.entry.notexist';
+            return $this->response;
+        }
+        $this->response = array(
+            'rowCount' => $this->response['rowCount'],
+            'result' => array(
+                'set' => $attributes,
+                'total_rows' => $totalRows,
+                'last_insert_id' => null,
+            ),
+            'error' => false,
+            'code' => 'scc.db.entry.exist',
+        );
+        return $this->response;
+    }
+    /**
+     * @name            listStockAttributeValuesOfStock ()
+     *                  List stock attribute values of product from database based on a variety of conditions.
+     *
+     * @since           1.0.5
+     * @version         1.0.5
+     * @author          Said İmamoğlu
+     *
+     * @use             $this->createException()
+     *
+     * @param           array $stock
+     * @param           array $filter Multi-dimensional array
+     * @param           array $sortOrder Array
+     * @param           array $limit
+     *
+     * @param           string $queryStr If a custom query string needs to be defined.
+     *
+     * @return          array           $response
+     */
+    public function listStockAttributeValuesOfStock($stock, $filter = null, $sortOrder = null, $limit = null, $queryStr = null){
+        $product = $this->validateAndGetStock($stock);
+        $filter = array();
+        $filter[] = array(
+            'glue' => 'and',
+            'condition' => array(
+                array(
+                    'glue' => 'and',
+                    'condition' => array('column' => $this->entity['stock_attribute_values']['alias'] . '.strock', 'comparison' => '=', 'value' => $stock->getId()),
+                )
+            )
+        );
+        return $this->listStockAttributeValues($filter);
+
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
     }
     /**
      * @name        doesSupplierExist ()
@@ -1401,8 +1519,13 @@ class StockManagementModel extends CoreModel{
     }
 
     /**
+<<<<<<< HEAD
      * @name            insertStockAttributeValues()
      *                  Inserts one or more stock attribute values into database.
+=======
+     * @name            insertProductAttributes()
+     *                  Inserts one or more product attribute values into database.
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
      *
      * @since           1.0.5
      * @version         1.0.5
@@ -1415,7 +1538,11 @@ class StockManagementModel extends CoreModel{
      *
      * @return          array           $response
      */
+<<<<<<< HEAD
     public function insertStockAttributeValues($collection){
+=======
+    public function insertProductAttributeValues($collection){
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
         $this->resetResponse();
         /** Parameter must be an array */
         if (!is_array($collection)) {
@@ -1453,8 +1580,12 @@ class StockManagementModel extends CoreModel{
                             unset($response, $sModel);
                             break;
                         case 'attribute':
+<<<<<<< HEAD
                             $pModel = $this->kernel->getContainer()->get('productmanagement.model');
                             $response = $pModel->getProductAttribute($value, 'id');
+=======
+                            $response = $this->getProductAttribute($value, 'id');
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
                             if (!$response['error']) {
                                 $entity->$set($response['result']['set']);
                             } else {
@@ -1604,7 +1735,11 @@ class StockManagementModel extends CoreModel{
     }
 
     /**
+<<<<<<< HEAD
      * @name            updateStockAttributeValues ()
+=======
+     * @name            updateProductAttributeValues ()
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
      *                  Updates one or more stock details in database.
      *
      * @since           1.0.5
@@ -1617,7 +1752,11 @@ class StockManagementModel extends CoreModel{
      *
      * @return          array           $response
      */
+<<<<<<< HEAD
     public function updateStockAttributeValues($collection)
+=======
+    public function updateProductAttributeValues($collection)
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
     {
         $this->resetResponse();
         /** Parameter must be an array */
@@ -1901,7 +2040,11 @@ class StockManagementModel extends CoreModel{
         if (is_numeric($stock)) {
             $response = $this->getStock($stock, 'id');
             if ($response['error']) {
+<<<<<<< HEAD
                 return $response;
+=======
+                return $this->createException('EntityDoesNotExist', 'Table: stock, id: ' . $stock, 'msg.error.db.stock.notfound');
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
             }
             $stock = $response['result']['set'];
         } else if (is_string($stock)) {
@@ -1909,11 +2052,16 @@ class StockManagementModel extends CoreModel{
             if ($response['error']) {
                 $response = $this->getStock($stock, 'supplier_sku');
                 if ($response['error']) {
+<<<<<<< HEAD
                     return $response;
+=======
+                    return $this->createException('EntityDoesNotExist', 'Table : stock, id / sku / supplier_sku: ' .$stock, 'msg.error.db.stock.notfound');
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
                 }
             }
             $stock = $response['result']['set'];
         }
+<<<<<<< HEAD
 
         return $stock;
     }
@@ -1995,6 +2143,10 @@ class StockManagementModel extends CoreModel{
         }
 
         return $product;
+=======
+
+        return $stock;
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
     }
     /**
      * @name            validateAndGetProductAttribute()
@@ -2012,7 +2164,11 @@ class StockManagementModel extends CoreModel{
      * @return          object          BiberLtd\Core\Bundles\ProductManagementBundle\Entity\ProductAttribute
      */
     private function validateAndGetProductAttribute($attribute){
+<<<<<<< HEAD
         $pModel = $this->kernel->getContainer()->get('productmanagement.model');
+=======
+        $pModel = $this->get('productmanagement.model');
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
         if (!is_numeric($attribute) && !$attribute instanceof ProductEntity\ProductAttribute) {
             return $this->createException('InvalidParameter', '$attribute parameter must hold BiberLtd\\Core\\Bundles\\ProductManagementBundle\\Entity\\ProductAttribute Entity or integer representing database row id', 'msg.error.invalid.parameter.product.attribute');
         }
@@ -2020,14 +2176,22 @@ class StockManagementModel extends CoreModel{
         if (is_numeric($attribute)) {
             $response = $pModel->getProductAttribute($attribute, 'id');
             if ($response['error']) {
+<<<<<<< HEAD
                 return $response;
+=======
+                return $this->createException('EntityDoesNotExist', 'Table : product_attributey, id: ' . $attribute,  'msg.error.db.product.attribute.notfound');
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
             }
             $attribute = $response['result']['set'];
         }
         else if (is_string($attribute)) {
             $response = $pModel->getProductAttribute($attribute, 'url_key');
             if ($response['error']) {
+<<<<<<< HEAD
                 return $response;
+=======
+                return $this->createException('EntityDoesNotExist', 'Table : product_attributey, url_key: ' . $attribute,  'msg.error.db.product.attribute.notfound');
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
             }
             $attribute = $response['result']['set'];
         }
@@ -2038,6 +2202,7 @@ class StockManagementModel extends CoreModel{
 /**
  * Change Log
  * **************************************
+<<<<<<< HEAD
  * v1.0.7                      Can Berkol
  * 12.12.2014
  * **************************************
@@ -2049,6 +2214,8 @@ class StockManagementModel extends CoreModel{
  * A validateAndGetProduct()
  * A validateAndGetLocale()
  * **************************************
+=======
+>>>>>>> 1fc71d94c37604b5cffa85b9c704ae90f76b0498
  * v1.0.5                      Can Berkol
  * 17.11.2014
  * **************************************
