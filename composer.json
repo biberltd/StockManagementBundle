@@ -17,9 +17,9 @@
         }
     ],
     "require": {
-       	"biberltd/core-bundle" : "self.version",
-	"biberltd/file-management-bundle" : "self.version",
-	"biberltd/product-management-bundle" : "self.version"
+      "biberltd/core-bundle" : "self.version",
+	"biberltd/file-management-bundle" : "3.1.*@dev",
+	"biberltd/product-management-bundle" : "3.1.*@dev"
     },
     "autoload": {
         "psr-0": { "BiberLtd\\Bundle\\StockManagementBundle": "" }
