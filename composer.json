@@ -5,7 +5,6 @@
     "keywords": [],
     "homepage": "http://github.com/biberltd/StockManagementBundle",
     "license": "MIT",
-	"version": "master",
     "authors": [
         {
             "name": "Can Berkol",
@@ -18,8 +17,8 @@
     ],
     "require": {
       "biberltd/core-bundle" : "self.version",
-	"biberltd/file-management-bundle" : "3.1.*@dev",
-	"biberltd/product-management-bundle" : "3.1.*@dev"
+	"biberltd/file-management-bundle" : "self.version",
+	"biberltd/product-management-bundle" : "self.version"
     },
     "autoload": {
         "psr-0": { "BiberLtd\\Bundle\\StockManagementBundle": "" }
