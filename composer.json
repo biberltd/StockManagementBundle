@@ -1,29 +1,28 @@
 {
-    "name": "biberltd/stock-management-bundle",
-    "type": "symfony-bundle",
-    "description": "",
-    "keywords": [],
-    "homepage": "http://github.com/biberltd/StockManagementBundle",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Can Berkol",
-            "email": "can.berkol@biberltd.com"
-        },
-		{
-            "name": "Said İmamoğlu",
-            "email": "said.imamoglu@biberltd.com"
-        }
-    ],
-    "require": {
-      "biberltd/core-bundle" : "self.version",
-	"biberltd/file-management-bundle" : "self.version",
-	"biberltd/product-management-bundle" : "self.version"
+  "name": "biberltd/stock-management-bundle",
+  "type": "symfony-bundle",
+  "description": "",
+  "keywords": [],
+  "homepage": "http://github.com/biberltd/StockManagementBundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Can Berkol",
+      "email": "can.berkol@biberltd.com"
     },
-    "autoload": {
-        "psr-0": { "BiberLtd\\Bundle\\StockManagementBundle": "" }
-
-    },
-    "minimum-stability": "dev",
-    "target-dir": "BiberLtd/Bundle/StockManagementBundle"
+    {
+      "name": "Said İmamoğlu",
+      "email": "said.imamoglu@biberltd.com"
+    }
+  ],
+  "require": {
+    "biberltd/core-bundle": "~3.3",
+    "biberltd/file-management-bundle": "~3.3",
+    "biberltd/product-management-bundle": "~3.3"
+  },
+  "autoload": {
+    "psr-0": {"BiberLtd\\Bundle\\StockManagementBundle": ""}
+  },
+  "minimum-stability": "dev",
+  "target-dir": "BiberLtd/Bundle/StockManagementBundle"
 }
