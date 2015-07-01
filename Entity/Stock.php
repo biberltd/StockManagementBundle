@@ -73,6 +73,10 @@ class Stock extends CoreEntity
      */
     private $product;
 
+    /**
+     * @ORM\Column(type="integer", length=10, nullable=false)
+     */
+    private $sort_order;
     /** 
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\StockManagementBundle\Entity\Supplier")
      * @ORM\JoinColumn(name="supplier", referencedColumnName="id")
@@ -287,6 +291,42 @@ class Stock extends CoreEntity
      */
     public function getSku() {
         return $this->sku;
+    }
+
+    /**
+     * @name        getSortOrder ()
+     *
+     * @author      Said İmamoğlu
+     *
+     * @since       1.0.0
+     * @version     1.0.0
+     *
+     * @return      mixed
+     */
+    public function getSortOrder()
+    {
+        return $this->sort_order;
+    }
+
+    /**
+     * @name        setSortOrder ()
+     *
+     * @author      Said İmamoğlu
+     *
+     * @since       1.0.0
+     * @version     1.0.0
+     *
+     * @param       mixed $sort_order
+     *
+     * @return      $this
+     */
+    public function setSortOrder($sort_order)
+    {
+        if (!$this->setModifiled('sort_order', $sort_order)->isModified()) {
+            return $this;
+        }
+        $this->sort_order = $sort_order;
+        return $this;
     }
 
     /**
