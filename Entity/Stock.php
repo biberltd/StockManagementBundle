@@ -1,4 +1,19 @@
 <?php
+/**
+ * @name        StockAttributeValue
+ * @package     BiberLtd\Bundle\StockManagementBundle\Entity
+ *
+ * @author      Can Berkol
+ *
+ * @version     1.0.1
+ * @date        07.07.2015
+ *
+ * @copyright   Biber Ltd. (http://www.biberltd.com)
+ * @license     GPL v3.0
+ *
+ * @description Model / Entity class.
+ *
+ */
 namespace BiberLtd\Bundle\StockManagementBundle\Entity;
 use Doctrine\ORM\Mapping AS ORM;
 use BiberLtd\Bundle\CoreBundle\CoreEntity;
@@ -18,8 +33,7 @@ use BiberLtd\Bundle\CoreBundle\CoreEntity;
  *     }
  * )
  */
-class Stock extends CoreEntity
-{
+class Stock extends CoreEntity{
     /** 
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -80,9 +94,7 @@ class Stock extends CoreEntity
     private $supplier;
 
     /**
-     * @name                  setDiscountPrice ()
-     *                                         Sets the discount_price property.
-     *                                         Updates the data only if stored value and value to be set are different.
+     * @name            setDiscountPrice ()
      *
      * @author          Can Berkol
      *
@@ -105,7 +117,6 @@ class Stock extends CoreEntity
 
     /**
      * @name            getDiscountPrice ()
-     *                                   Returns the value of discount_price property.
      *
      * @author          Can Berkol
      *
@@ -119,8 +130,7 @@ class Stock extends CoreEntity
     }
 
     /**
-     * @name            get İd()
-     *                      Returns the value of id property.
+     * @name            getId()
      *
      * @author          Can Berkol
      *
@@ -366,6 +376,5 @@ class Stock extends CoreEntity
     public function getSupplierSku() {
         return $this->supplier_sku;
     }
-
 
 }

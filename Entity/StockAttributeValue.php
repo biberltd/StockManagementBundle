@@ -1,4 +1,5 @@
 <?php
+
 namespace BiberLtd\Bundle\StockManagementBundle\Entity;
 use BiberLtd\Bundle\CoreBundle\CoreEntity;
 use Doctrine\ORM\Mapping AS ORM;
@@ -7,7 +8,6 @@ use Doctrine\ORM\Mapping AS ORM;
  * @ORM\Entity
  * @ORM\Table(
  *     name="stock_attribute_value",
- *     schema="innodb",
  *     options={"charset":"utf8","collate":"utf8_turkish_ci","engine":"innodb"},
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(name="idxUStockAttributeValueId", columns={"id"}),
@@ -261,3 +261,11 @@ class StockAttributeValue extends CoreEntity
         return $this->value;
     }
 }
+/**
+ * Change Log
+ * **************************************
+ * v1.0.1                      09.07.2015
+ * Can Berkol
+ * **************************************
+ * BF :: schema definition is removed from annotation as it was causing mysql permission issues.
+ */
