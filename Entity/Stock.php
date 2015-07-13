@@ -424,6 +424,6 @@ class Stock extends CoreEntity
  * v1.0.1                      13.07.2015
  * Can Berkol
  * **************************************
- * BF :: Typo fixed in setSortOrder() "modifiled" => "modified"
+ * BF :: Typo fixed in setSortOrder() modifiled => modified
  *
  */
