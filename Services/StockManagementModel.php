@@ -11,8 +11,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.0.8
- * @date        13.07.2015
+ * @version     1.0.9
+ * @date        14.07.2015
  */
 
 namespace BiberLtd\Bundle\StockManagementBundle\Services;
@@ -878,6 +878,40 @@ class StockManagementModel extends CoreModel{
 
     }
     /**
+     * @name            listStockAttributeValuesOfProduct()
+     *
+     * @since           1.0.9
+     * @version         1.0.9
+     *
+     * @author          Said İmamoğlu
+     *
+     * @param           array           $product
+     * @param           array           $filter
+     * @param           array           $sortOrder
+     * @param           array           $limit
+     *
+     * @return          array           $response
+     */
+    public function listStockAttributeValuesOfProduct($product, $filter = null, $sortOrder = null, $limit = null){
+        $pModel = $this->kernel->getContainer()->get('productManagement.model');
+        $response = $pModel->getProduct($product);
+        if($response->error->exist){
+            return $response;
+        }
+        $product= $response->result->set;
+        unset($response);
+        $filter[] = array(
+            'glue' => 'and',
+            'condition' => array(
+                array(
+                    'glue' => 'and',
+                    'condition' => array('column' => $this->entity['sav']['alias'] . '.product', 'comparison' => '=', 'value' => $product->getId()),
+                )
+            )
+        );
+        return $this->listStockAttributeValues($filter, $sortOrder, $limit);
+    }
+    /**
      * @name            listStockAttributeValuesOfStock ()
      *
      * @since           1.0.5
@@ -1351,6 +1385,11 @@ class StockManagementModel extends CoreModel{
 
 /**
  * Change Log
+ * **************************************
+ * v1.0.9                      14.07.2015
+ * Said İmamoğlu
+ * **************************************
+ * FR :: listStockAttributeValuesOfProduct() added.
  * **************************************
  * v1.0.8                      13.07.2015
  * Can Berkol
