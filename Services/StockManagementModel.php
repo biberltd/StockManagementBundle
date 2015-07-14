@@ -1005,7 +1005,8 @@ class StockManagementModel extends CoreModel{
                             unset($response, $sModel);
                             break;
                         case 'attribute':
-                            $response = $this->getProductAttribute($value);
+                            $pModel = $this->kernel->getContainer()->get('productmanagement.model');
+                            $response = $pModel->getProductAttribute($value);
                             if ($response->error->exist) {
                                 return $response;
                             }
@@ -1190,8 +1191,7 @@ class StockManagementModel extends CoreModel{
                             unset($response, $lModel);
                             break;
                         case 'product':
-                            $pModel = $this->kernel->getContainer()->get('productManagement.model');
-                            $response = $pModel->getProduct($value);
+                            $response = $this->getStock($value);
                             if ($response->error->exist) {
                                 return $response;
                             }
