@@ -11,8 +11,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.0.6
- * @date        24.06.2015
+ * @version     1.0.8
+ * @date        13.07.2015
  */
 
 namespace BiberLtd\Bundle\StockManagementBundle\Services;
@@ -119,7 +119,7 @@ class StockManagementModel extends CoreModel{
             }
             else{
                 $response = $this->getStock($entry);
-                if(!$response->error->exists){
+                if(!$response->error->exist){
                     $entry = $response->result->set;
                     $this->em->remove($entry);
                     $countDeleted++;
@@ -400,7 +400,7 @@ class StockManagementModel extends CoreModel{
         $timeStamp = time();
         $exist = false;
         $response = $this->getAttributeValueOfStock($attribute, $stock, $language);
-        if ($response->error->exists) {
+        if ($response->error->exist) {
             if($bypass){
                 return $exist;
             }
@@ -437,7 +437,7 @@ class StockManagementModel extends CoreModel{
 
         $response = $this->getStock($item);
 
-        if ($response->error->exists) {
+        if ($response->error->exist) {
             if($bypass){
                 return $exist;
             }
@@ -677,7 +677,7 @@ class StockManagementModel extends CoreModel{
             }
             else{
                 $response = $this->getSupplier($entry);
-                if(!$response->error->exists){
+                if(!$response->error->exist){
                     $entry = $response->result->set;
                     $this->em->remove($entry);
                     $countDeleted++;
@@ -932,7 +932,7 @@ class StockManagementModel extends CoreModel{
 
         $response = $this->getStock($item);
 
-        if ($response->error->exists) {
+        if ($response->error->exist) {
             if($bypass){
                 return $exist;
             }
@@ -966,10 +966,10 @@ class StockManagementModel extends CoreModel{
     }
 
     /**
-     * @name            insertProductAttributes()
+     * @name            insertStockAttributeValues()
      *
-     * @since           1.0.5
-     * @version         1.0.6
+     * @since           1.0.8
+     * @version         1.0.8
      *
      * @author          Can Berkol
      *
@@ -977,7 +977,7 @@ class StockManagementModel extends CoreModel{
      *
      * @return          array           $response
      */
-    public function insertProductAttributeValues($collection){
+    public function insertStockAttributeValues($collection){
         $timeStamp = time();
         $countInserts = 0;
         $insertedItems = array();
@@ -1038,6 +1038,7 @@ class StockManagementModel extends CoreModel{
         }
         return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
     }
+
 
     /**
      * @name            insertSupplier()
@@ -1330,7 +1331,7 @@ class StockManagementModel extends CoreModel{
         $response = $this->listStocks($filter, array('quantity'=>'desc'), array('start'=>0,'count'=>1));
         $exist = false;
 
-        if ($response->error->exists) {
+        if ($response->error->exist) {
             if($bypass){
                 return $exist;
             }
@@ -1351,10 +1352,18 @@ class StockManagementModel extends CoreModel{
 /**
  * Change Log
  * **************************************
+ * v1.0.8                      13.07.2015
+ * Can Berkol
+ * **************************************
+ * BF :: typo fixed. ->exists to ->exist
+ * FR :: insertStockAttributeValues() added.
+ *
+ * **************************************
  * v1.0.7                      01.07.2015
  * Said İmamoğlu
  * **************************************
  * CR :: Updates and bugfixes compatible with Core 3.3.
+ *
  * **************************************
  * v1.0.6                      24.06.2015
  * Can Berkol

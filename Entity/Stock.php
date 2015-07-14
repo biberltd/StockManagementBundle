@@ -1,4 +1,19 @@
 <?php
+/**
+ * @name        Stock
+ * @package     BiberLtd\Bundle\StockManagementBundle\Entity
+ *
+ * @author      Can Berkol
+ *              Murat Ünal
+ * @version     1.0.1
+ * @date        07.07.2015
+ *
+ * @copyright   Biber Ltd. (http://www.biberltd.com)
+ * @license     GPL v3.0
+ *
+ * @description Model / Entity class.
+ *
+ */
 namespace BiberLtd\Bundle\StockManagementBundle\Entity;
 use Doctrine\ORM\Mapping AS ORM;
 use BiberLtd\Bundle\CoreBundle\CoreEntity;
@@ -109,7 +124,6 @@ class Stock extends CoreEntity
 
     /**
      * @name            getDiscountPrice ()
-     *                                   Returns the value of discount_price property.
      *
      * @author          Can Berkol
      *
@@ -123,8 +137,7 @@ class Stock extends CoreEntity
     }
 
     /**
-     * @name            get İd()
-     *                      Returns the value of id property.
+     * @name            getId()
      *
      * @author          Can Berkol
      *
@@ -322,7 +335,7 @@ class Stock extends CoreEntity
      */
     public function setSortOrder($sort_order)
     {
-        if (!$this->setModifiled('sort_order', $sort_order)->isModified()) {
+        if (!$this->setModified('sort_order', $sort_order)->isModified()) {
             return $this;
         }
         $this->sort_order = $sort_order;
@@ -406,6 +419,11 @@ class Stock extends CoreEntity
     public function getSupplierSku() {
         return $this->supplier_sku;
     }
-
-
 }
+/** *************************************
+ * v1.0.1                      13.07.2015
+ * Can Berkol
+ * **************************************
+ * BF :: Typo fixed in setSortOrder() modifiled => modified
+ *
+ */
