@@ -899,13 +899,20 @@ class StockManagementModel extends CoreModel{
             return $response;
         }
         $product= $response->result->set;
+        $sopResponse = $this->listStocksOfProduct($product);
+        if ($sopResponse->error->exist) {
+            return $sopResponse;
+        }
+        foreach ($sopResponse->result->set as $sopEntity) {
+            $stockIds[] = $sopEntity->getId();
+        }
         unset($response);
         $filter[] = array(
             'glue' => 'and',
             'condition' => array(
                 array(
                     'glue' => 'and',
-                    'condition' => array('column' => $this->entity['sav']['alias'] . '.product', 'comparison' => '=', 'value' => $product->getId()),
+                    'condition' => array('column' => $this->entity['sav']['alias'] . '.stock', 'comparison' => 'in', 'value' => $stockIds),
                 )
             )
         );
