@@ -11,8 +11,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.1.0
- * @date        21.07.2015
+ * @version     1.1.1
+ * @date        23.07.2015
  */
 
 namespace BiberLtd\Bundle\StockManagementBundle\Services;
@@ -1011,7 +1011,7 @@ class StockManagementModel extends CoreModel{
 	 * @name            insertStockAttributeValues()
 	 *
 	 * @since           1.0.8
-	 * @version         1.0.8
+	 * @version         1.1.1
 	 *
 	 * @author          Can Berkol
 	 *
@@ -1040,7 +1040,7 @@ class StockManagementModel extends CoreModel{
 						case 'language':
 							$lModel = $this->kernel->getContainer()->get('multilanguagesupport.model');
 							$response = $lModel->getLanguage($value);
-							if (!$response->error->exist) {
+							if ($response->error->exist) {
 								return $response;
 							}
 							$entity->$set($response->result->set);
@@ -1393,6 +1393,12 @@ class StockManagementModel extends CoreModel{
 
 /**
  * Change Log
+ * **************************************
+ * v1.1.1                      23.07.2015
+ * Can Berkol
+ * **************************************
+ * BF :: insertStockAttributeValues() was returning early response, due to a wrong error check. Fixed.
+ *
  * **************************************
  * v1.1.0                      21.07.2015
  * Can Berkol
