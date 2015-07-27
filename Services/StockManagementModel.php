@@ -11,8 +11,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.1.1
- * @date        23.07.2015
+ * @version     1.1.2
+ * @date        27.07.2015
  */
 
 namespace BiberLtd\Bundle\StockManagementBundle\Services;
@@ -782,7 +782,7 @@ class StockManagementModel extends CoreModel{
 	 * @name        getSupplier ()
 	 *
 	 * @since           1.0.1
-	 * @version         1.0.6
+	 * @version         1.1.2
 	 *
 	 * @author          Can Berkol
 	 * @author          Said İmamoğlu
@@ -799,10 +799,10 @@ class StockManagementModel extends CoreModel{
 		$result = null;
 		switch($supplier){
 			case is_numeric($supplier):
-				$result = $this->em->getRepository($this->entity['s']['name'])->findOneBy(array('id' => $supplier));
+				$result = $this->em->getRepository($this->entity['sup']['name'])->findOneBy(array('id' => $supplier));
 				break;
 			case is_string($supplier):
-				$result = $this->em->getRepository($this->entity['s']['name'])->findOneBy(array('url_key' => $supplier));
+				$result = $this->em->getRepository($this->entity['sup']['name'])->findOneBy(array('url_key' => $supplier));
 				break;
 		}
 		if(is_null($result)){
@@ -1393,6 +1393,12 @@ class StockManagementModel extends CoreModel{
 
 /**
  * Change Log
+ * **************************************
+ * v1.1.2                      27.07.2015
+ * Can Berkol
+ * **************************************
+ * BF :: Wrong entity was being used in getSupplier query. Fixed.
+ *
  * **************************************
  * v1.1.1                      23.07.2015
  * Can Berkol
