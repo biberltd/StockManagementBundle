@@ -1,88 +1,78 @@
 <?php
-
+/**
+ * @author		Can Berkol
+ *
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
+ *
+ * @date        27.12.2015
+ */
 namespace BiberLtd\Bundle\StockManagementBundle\Entity;
 use BiberLtd\Bundle\CoreBundle\CoreEntity;
 use Doctrine\ORM\Mapping AS ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(
- *     name="stock_attribute_value",
- *     options={"charset":"utf8","collate":"utf8_turkish_ci","engine":"innodb"},
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="idxUStockAttributeValueId", columns={"id"}),
- *         @ORM\UniqueConstraint(name="idxUStockAttributeValue", columns={"language","attribute","stock"})
- *     }
- * )
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="idxUStockAttributeValueId", columns={"id"})})
  */
 class StockAttributeValue extends CoreEntity
 {
 	/**
 	 * @ORM\Id
-	 * @ORM\Column(type="integer", length=10)
+	 * @ORM\Column(type="integer", length=10, options={"default":"System defined id.","unsigned":true})
 	 * @ORM\GeneratedValue(strategy="AUTO")
+	 * @var int
 	 */
 	private $id;
 
 	/**
-	 * @ORM\Column(type="text", nullable=false)
+	 * @ORM\Column(type="string", nullable=false, options={"default":"Value of stock attribute"})
+	 * @var string
 	 */
 	private $value;
 
 	/**
-	 * @ORM\Column(type="integer", length=10, nullable=false)
+	 * @ORM\Column(type="integer", nullable=false, options={"default":"Custom sort order.","unsigned":true})
+	 * @var int
 	 */
 	private $sort_order;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language")
-	 * @ORM\JoinColumn(name="language", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+	 * @ORM\JoinColumn(name="language", referencedColumnName="id", unique=true, onDelete="CASCADE")
+	 * @ORM\OneToOne(targetEntity="BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language")
+	 * @var \BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language
 	 */
 	private $language;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\ProductManagementBundle\Entity\ProductAttribute")
-	 * @ORM\JoinColumn(name="attribute", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+	 * 
+	 * @ORM\JoinColumn(name="attribute", referencedColumnName="id", unique=true, onDelete="CASCADE")
+	 * @ORM\OneToOne(targetEntity="ProductAttribute")
+	 * @var \BiberLtd\Bundle\ProductManagementBundle\Entity\ProductAttribute
 	 */
 	private $attribute;
 
+
 	/**
-	 * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\StockManagementBundle\Entity\Stock")
-	 * @ORM\JoinColumn(name="stock", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+	 * @ORM\OneToOne(targetEntity="BiberLtd\Bundle\StockManagementBundle\Entity\Stock")
+	 * @ORM\JoinColumn(name="stock", referencedColumnName="id", unique=true, onDelete="CASCADE")
+	 * @var \BiberLtd\Bundle\StockManagementBundle\Entity\Stock
 	 */
 	private $stock;
 
 	/**
-	 * @name            getId()
-	 *                  Gets $id property.
-	 * .
-	 * @author          Murat Ünal
-	 * @since           1.0.0
-	 * @version         1.0.0
-	 *
-	 * @return          integer          $this->id
+	 * @return mixed
 	 */
 	public function getId(){
 		return $this->id;
 	}
 
 	/**
-	 * @name                  setAttribute ()
-	 *                                     Sets the attribute property.
-	 *                                     Updates the data only if stored value and value to be set are different.
+	 * @param \BiberLtd\Bundle\ProductManagementBundle\Entity\ProductAttribute $attribute
 	 *
-	 * @author          Can Berkol
-	 *
-	 * @since           1.0.0
-	 * @version         1.0.0
-	 *
-	 * @use             $this->setModified()
-	 *
-	 * @param           mixed $attribute
-	 *
-	 * @return          object                $this
+	 * @return $this
 	 */
-	public function setAttribute($attribute) {
+	public function setAttribute(\BiberLtd\Bundle\ProductManagementBundle\Entity\ProductAttribute $attribute) {
 		if(!$this->setModified('attribute', $attribute)->isModified()) {
 			return $this;
 		}
@@ -91,37 +81,18 @@ class StockAttributeValue extends CoreEntity
 	}
 
 	/**
-	 * @name            getAttribute ()
-	 *                               Returns the value of attribute property.
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @since           1.0.0
-	 * @version         1.0.0
-	 *
-	 * @return          mixed           $this->attribute
+	 * @return \BiberLtd\Bundle\ProductManagementBundle\Entity\ProductAttribute
 	 */
 	public function getAttribute() {
 		return $this->attribute;
 	}
 
 	/**
-	 * @name                  setLanguage ()
-	 *                                    Sets the language property.
-	 *                                    Updates the data only if stored value and value to be set are different.
+	 * @param \BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language $language
 	 *
-	 * @author          Can Berkol
-	 *
-	 * @since           1.0.0
-	 * @version         1.0.0
-	 *
-	 * @use             $this->setModified()
-	 *
-	 * @param           mixed $language
-	 *
-	 * @return          object                $this
+	 * @return $this
 	 */
-	public function setLanguage($language) {
+	public function setLanguage(\BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language $language) {
 		if(!$this->setModified('language', $language)->isModified()) {
 			return $this;
 		}
@@ -130,37 +101,18 @@ class StockAttributeValue extends CoreEntity
 	}
 
 	/**
-	 * @name            getLanguage ()
-	 *                              Returns the value of language property.
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @since           1.0.0
-	 * @version         1.0.0
-	 *
-	 * @return          mixed           $this->language
+	 * @return \BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language
 	 */
 	public function getLanguage() {
 		return $this->language;
 	}
 
 	/**
-	 * @name                  setProduct ()
-	 *                                   Sets the product property.
-	 *                                   Updates the data only if stored value and value to be set are different.
+	 * @param \BiberLtd\Bundle\StockManagementBundle\Entity\Stock $stock
 	 *
-	 * @author          Can Berkol
-	 *
-	 * @since           1.0.0
-	 * @version         1.0.0
-	 *
-	 * @use             $this->setModified()
-	 *
-	 * @param           mixed $stock
-	 *
-	 * @return          object                $this
+	 * @return $this
 	 */
-	public function setStock($stock) {
+	public function setStock(\BiberLtd\Bundle\StockManagementBundle\Entity\Stock $stock) {
 		if(!$this->setModified('stock', $stock)->isModified()) {
 			return $this;
 		}
@@ -169,37 +121,18 @@ class StockAttributeValue extends CoreEntity
 	}
 
 	/**
-	 * @name            getProduct ()
-	 *                             Returns the value of product property.
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @since           1.0.0
-	 * @version         1.0.0
-	 *
-	 * @return          mixed           $this->product
+	 * @return \BiberLtd\Bundle\StockManagementBundle\Entity\Stock
 	 */
 	public function getStock() {
 		return $this->stock;
 	}
 
 	/**
-	 * @name                  setSortOrder ()
-	 *                                     Sets the sort_order property.
-	 *                                     Updates the data only if stored value and value to be set are different.
+	 * @param int $sort_order
 	 *
-	 * @author          Can Berkol
-	 *
-	 * @since           1.0.0
-	 * @version         1.0.0
-	 *
-	 * @use             $this->setModified()
-	 *
-	 * @param           mixed $sort_order
-	 *
-	 * @return          object                $this
+	 * @return $this
 	 */
-	public function setSortOrder($sort_order) {
+	public function setSortOrder(\integer $sort_order) {
 		if(!$this->setModified('sort_order', $sort_order)->isModified()) {
 			return $this;
 		}
@@ -208,37 +141,18 @@ class StockAttributeValue extends CoreEntity
 	}
 
 	/**
-	 * @name            getSortOrder ()
-	 *                               Returns the value of sort_order property.
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @since           1.0.0
-	 * @version         1.0.0
-	 *
-	 * @return          mixed           $this->sort_order
+	 * @return int
 	 */
 	public function getSortOrder() {
 		return $this->sort_order;
 	}
 
 	/**
-	 * @name                  setValue ()
-	 *                                 Sets the value property.
-	 *                                 Updates the data only if stored value and value to be set are different.
+	 * @param string $value
 	 *
-	 * @author          Can Berkol
-	 *
-	 * @since           1.0.0
-	 * @version         1.0.0
-	 *
-	 * @use             $this->setModified()
-	 *
-	 * @param           mixed $value
-	 *
-	 * @return          object                $this
+	 * @return $this
 	 */
-	public function setValue($value) {
+	public function setValue(\string $value) {
 		if(!$this->setModified('value', $value)->isModified()) {
 			return $this;
 		}
@@ -247,25 +161,9 @@ class StockAttributeValue extends CoreEntity
 	}
 
 	/**
-	 * @name            getValue ()
-	 *                           Returns the value of value property.
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @since           1.0.0
-	 * @version         1.0.0
-	 *
-	 * @return          mixed           $this->value
+	 * @return string
 	 */
 	public function getValue() {
 		return $this->value;
 	}
 }
-/**
- * Change Log
- * **************************************
- * v1.0.1                      09.07.2015
- * Can Berkol
- * **************************************
- * BF :: schema definition is removed from annotation as it was causing mysql permission issues.
- */

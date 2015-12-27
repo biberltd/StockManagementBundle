@@ -1,20 +1,12 @@
 <?php
 /**
- * @vendor      BiberLtd
- * @package     StockManagementBundle
- * @subpackage  Services
+ * @author		Can Berkol
  *
- * @name        StockManagementModel
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
  *
- * @author      Can Berkol
- * @author      Said İmamoğlu
- *
- * @copyright   Biber Ltd. (www.biberltd.com)
- *
- * @version     1.1.2
- * @date        27.07.2015
+ * @date        27.12.2015
  */
-
 namespace BiberLtd\Bundle\StockManagementBundle\Services;
 
 /** Extends CoreModel */
@@ -36,16 +28,10 @@ class StockManagementModel extends CoreModel{
 	);
 
 	/**
-	 * @name            deleteAllAttributeValuesOfStockAttribute ()
+	 * @param mixed $attribute
+	 * @param mixed $stock
 	 *
-	 * @since           1.0.6
-	 * @version         1.0.6
-	 * @author          Can Berkol
-	 *
-	 * @param           mixed           $attribute
-	 * @param           mixed           $stock
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function deleteAllAttributeValuesOfStockAttribute($attribute, $stock){
 		$timeStamp = time();
@@ -73,41 +59,22 @@ class StockManagementModel extends CoreModel{
 
 		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, time());
 	}
+
 	/**
-	 * @name            deleteStock ()
+	 * @param mixed $stock
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->deleteStocks()
-	 *
-	 * @param           mixed           $stock
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function deleteStock($stock){
 		return $this->deleteStocks(array($stock));
 	}
 
 	/**
-	 * @name            deleteStocks ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           array           $collection
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function deleteStocks($collection) {
+	public function deleteStocks(array $collection) {
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
@@ -136,21 +103,13 @@ class StockManagementModel extends CoreModel{
 	}
 
 	/**
-	 * @name            listStocks ()
+	 * @param array|null $filter
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @version         1.0.0
-	 * @since           1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           array       $filter
-	 * @param           array       $sortOrder
-	 * @param           array       $limit
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listStocks($filter = null, $sortOrder = null, $limit = null){
+	public function listStocks(array $filter = null, array $sortOrder = null, array $limit = null){
 		$timeStamp = time();
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
@@ -202,21 +161,15 @@ class StockManagementModel extends CoreModel{
 		}
 		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
 	}
+
 	/**
-	 * @name            listStocksOfProduct()
+	 * @param mixed $product
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @author          Can Berkol
-	 * @version         1.0.3
-	 * @since           1.0.6
-	 *
-	 * @param           mixed       $product
-	 * @param           array       $sortOrder
-	 * @param           array       $limit
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listStocksOfProduct($product, $sortOrder = null, $limit = null){
-		$timeStamp = time();
+	public function listStocksOfProduct($product, array $sortOrder = null, array $limit = null){
 		$pModel = $this->kernel->getContainer()->get('productmanagement.model');
 		$response = $pModel->getProduct($product);
 		if($response->error->exist){
@@ -238,21 +191,16 @@ class StockManagementModel extends CoreModel{
 		);
 		return $this->listStocks($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            listStocksOfProduct()
+	 * @param mixed $product
+	 * @param mixed $supplier
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @author          Can Berkol
-	 * @version         1.0.3
-	 * @since           1.0.6
-	 *
-	 * @param           mixed       $product
-	 * @param           mixed       $supplier
-	 * @param           array       $sortOrder
-	 * @param           array       $limit
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listStocksOfProductFromSupplier($product, $supplier, $sortOrder = null, $limit = null){
+	public function listStocksOfProductFromSupplier($product, $supplier, array $sortOrder = null, array $limit = null){
 		$timeStamp = time();
 		$pModel = $this->kernel->getContainer()->get('productmanagement.model');
 		$response = $pModel->getProduct($product);
@@ -272,7 +220,7 @@ class StockManagementModel extends CoreModel{
 			)
 		);
 		$column = $this->entity['s']['alias'] . '.supplier';
-		$response = $pModel->getSupplier($product);
+		$response = $pModel->getSupplier($supplier);
 		if($response->error->exist){
 			return $response;
 		}
@@ -289,18 +237,13 @@ class StockManagementModel extends CoreModel{
 		);
 		return $this->listStocks($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            getAttributeValueOfStock()
+	 * @param mixed $attribute
+	 * @param mixed $stock
+	 * @param mixed $language
 	 *
-	 * @since           1.0.5
-	 * @version         1.0.6
-	 * @author          Can Berkol
-	 *
-	 * @param           mixed           $attribute
-	 * @param           mixed           $stock
-	 * @param           mixed           $language
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function getAttributeValueOfStock($attribute, $stock, $language){
 		$timeStamp = time();
@@ -341,18 +284,11 @@ class StockManagementModel extends CoreModel{
 		}
 		return new ModelResponse($result[0], $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
 	}
+
 	/**
-	 * @name            getStock ()
+	 * @param mixed $stock
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           mixed       $stock
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function getStock($stock){
 		$timeStamp = time();
@@ -380,24 +316,16 @@ class StockManagementModel extends CoreModel{
 
 		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
 	}
+
 	/**
-	 * @name            doesStockAttributeValueExist()
+	 * @param mixed $attribute
+	 * @param mixed $stock
+	 * @param mixed $language
+	 * @param bool $bypass
 	 *
-	 * @since           1.0.5
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->getAttributeValueOfStock()
-	 *
-	 * @param           mixed       $attribute
-	 * @param           mixed       $stock
-	 * @param           mixed       $language
-	 * @param           bool        $bypass
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse|bool
 	 */
-	public function doesStockAttributeValueExist($attribute, $stock, $language, $bypass = false){
+	public function doesStockAttributeValueExist($attribute, $stock, $language, \bool $bypass = false){
 		$timeStamp = time();
 		$exist = false;
 		$response = $this->getAttributeValueOfStock($attribute, $stock, $language);
@@ -416,23 +344,14 @@ class StockManagementModel extends CoreModel{
 		}
 		return new ModelResponse(true, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
 	}
+
 	/**
-	 * @name        doesStockExist ()
+	 * @param mixed $item
+	 * @param bool $bypass
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->getStock()
-	 *
-	 * @param           mixed       $item
-	 * @param           bool        $bypass
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse|bool
 	 */
-	public function doesStockExist($item, $bypass = false){
+	public function doesStockExist($item, \bool $bypass = false){
 		$timeStamp = time();
 		$exist = false;
 
@@ -455,38 +374,20 @@ class StockManagementModel extends CoreModel{
 	}
 
 	/**
-	 * @name            insertStock ()
+	 * @param mixed $stock
 	 *
-	 * @since           1.0.1
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->insertStocks()
-	 *
-	 * @param           array           $stock
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function insertStock($stock){
 		return $this->insertStocks(array($stock));
 	}
 
 	/**
-	 * @name            insertStocks ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.1
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           array           $collection
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function insertStocks($collection){
+	public function insertStocks(array $collection){
 		$timeStamp = time();
 		$countInserts = 0;
 		foreach ($collection as $data) {
@@ -539,39 +440,20 @@ class StockManagementModel extends CoreModel{
 	}
 
 	/**
-	 * @name            updateStock()
+	 * @param mixed $stock
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           mixed   $stock
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-
 	public function updateStock($stock){
 		return $this->updateStocks(array($stock));
 	}
 
 	/**
-	 * @name            updateStocks()
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           array   $collection
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function updateStocks($collection){
+	public function updateStocks(array $collection){
 		$timeStamp = time();
 		$countUpdates = 0;
 		foreach ($collection as $data) {
@@ -632,40 +514,20 @@ class StockManagementModel extends CoreModel{
 	}
 
 	/**
-	 * @name            deleteSupplier ()
+	 * @param mixed $item
 	 *
-	 * @since           1.0.1
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->deleteSuppliers()
-	 *
-	 * @param           mixed           $item
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function deleteSupplier($item){
 		return $this->deleteSuppliers(array($item));
 	}
 
 	/**
-	 * @name            deleteSuppliers ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.0
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           array           $collection
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function deleteSuppliers($collection){
+	public function deleteSuppliers(array $collection){
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
@@ -694,21 +556,13 @@ class StockManagementModel extends CoreModel{
 	}
 
 	/**
-	 * @name            listSuppliers ()
+	 * @param array|null $filter
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @version         1.0.1
-	 * @since           1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           array   $filter
-	 * @param           array   $sortOrder
-	 * @param           array   $limit
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listSuppliers($filter = null, $sortOrder = null, $limit = null){
+	public function listSuppliers(array $filter = null, array $sortOrder = null, array $limit = null){
 		$timeStamp = time();
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
@@ -752,21 +606,13 @@ class StockManagementModel extends CoreModel{
 		}
 		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
 	}
+
 	/**
-	 * @name            getStockAttributeValue ()
+	 * @param int $id
 	 *
-	 * @since           1.0.5
-	 * @version         1.0.6
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->createException()
-	 * @use             $this->resetResponse()
-	 *
-	 * @param           integer         $id
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function getStockAttributeValue($id){
+	public function getStockAttributeValue(\integer $id){
 		$timeStamp = time();
 
 		$result = $this->em->getRepository($this->entity['sav']['name'])
@@ -778,18 +624,11 @@ class StockManagementModel extends CoreModel{
 
 		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
 	}
+
 	/**
-	 * @name        getSupplier ()
+	 * @param mixed $supplier
 	 *
-	 * @since           1.0.1
-	 * @version         1.1.2
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           mixed           $supplier
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function getSupplier($supplier){
 		$timeStamp = time();
@@ -811,22 +650,15 @@ class StockManagementModel extends CoreModel{
 
 		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
 	}
+
 	/**
-	 * @name            listStockAttributeValues ()
+	 * @param array|null $filter
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.0.5
-	 * @version         1.0.6
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           array           $filter
-	 * @param           array           $sortOrder
-	 * @param           array           $limit
-	 *
-	 * @return          \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listStockAttributeValues($filter = null, $sortOrder = null, $limit = null){
+	public function listStockAttributeValues(array $filter = null ,array $sortOrder = null, array $limit = null){
 		$timeStamp = time();
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
@@ -878,22 +710,16 @@ class StockManagementModel extends CoreModel{
 		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
 
 	}
+
 	/**
-	 * @name            listStockAttributeValuesOfProduct()
+	 * @param mixed $product
+	 * @param array|null $filter
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.0.9
-	 * @version         1.0.9
-	 *
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           array           $product
-	 * @param           array           $filter
-	 * @param           array           $sortOrder
-	 * @param           array           $limit
-	 *
-	 * @return          array           $response
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listStockAttributeValuesOfProduct($product, $filter = null, $sortOrder = null, $limit = null){
+	public function listStockAttributeValuesOfProduct($product, array $filter = null, array $sortOrder = null, array $limit = null){
 		$pModel = $this->kernel->getContainer()->get('productManagement.model');
 		$response = $pModel->getProduct($product);
 		if($response->error->exist){
@@ -919,24 +745,16 @@ class StockManagementModel extends CoreModel{
 		);
 		return $this->listStockAttributeValues($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            listStockAttributeValuesOfStock ()
+	 * @param mixed $stock
+	 * @param array|null $filter
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
 	 *
-	 * @since           1.0.5
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           array           $stock
-	 * @param           array           $filter
-	 * @param           array           $sortOrder
-	 * @param           array           $limit
-	 *
-	 * @return          array           $response
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function listStockAttributeValuesOfStock($stock, $filter = null, $sortOrder = null, $limit = null){
-		$pModel = $this->kernel->getContainer()->get('productManagement.model');
+	public function listStockAttributeValuesOfStock($stock, array $filter = null, array $sortOrder = null, array $limit = null){
 		$response = $this->getStock($stock);
 		if($response->error->exist){
 			return $response;
@@ -954,21 +772,14 @@ class StockManagementModel extends CoreModel{
 		);
 		return $this->listStockAttributeValues($filter, $sortOrder, $limit);
 	}
+
 	/**
-	 * @name            doesSupplierExist ()
+	 * @param mixed $item
+	 * @param bool $bypass
 	 *
-	 * @since           1.0.1
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           mixed       $item
-	 * @param           bool        $bypass
-	 *
-	 * @return          mixed       $response
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse|bool
 	 */
-	public function doesSupplierExist($item, $bypass = false){
+	public function doesSupplierExist($item, \bool $bypass = false){
 		$timeStamp = time();
 		$exist = false;
 
@@ -989,37 +800,22 @@ class StockManagementModel extends CoreModel{
 		}
 		return new ModelResponse(true, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
 	}
+
 	/**
-	 * @name            insertStockAttributeValue()
+	 * @param mixed $attrVal
 	 *
-	 * @since           1.0.5
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->insertProductAttributeValues()
-	 *
-	 * @param           mixed           $attrVal
-	 *
-	 * @return          array           $response
+	 * @return array
 	 */
 	public function insertStockAttributeValue($attrVal){
 		return $this->insertStockAttributeValues(array($attrVal));
 	}
 
 	/**
-	 * @name            insertStockAttributeValues()
+	 * @param array $collection
 	 *
-	 * @since           1.0.8
-	 * @version         1.1.1
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @param           array           $collection
-	 *
-	 * @return          array           $response
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function insertStockAttributeValues($collection){
+	public function insertStockAttributeValues(array $collection){
 		$timeStamp = time();
 		$countInserts = 0;
 		$insertedItems = array();
@@ -1081,42 +877,21 @@ class StockManagementModel extends CoreModel{
 		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
 	}
 
-
 	/**
-	 * @name            insertSupplier()
+	 * @param mixed $item
 	 *
-	 * @since           1.0.1
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->insertSuppliers()
-	 *
-	 * @param           array           $item
-	 *
-	 * @return          array           $response
+	 * @return array
 	 */
-
 	public function insertSupplier($item){
 		return $this->insertSuppliers(array($item));
 	}
 
 	/**
-	 * @name            insertSuppliers ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.1
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           array           $collection
-	 *
-	 * @return          array           $response
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-
-	public function insertSuppliers($collection){
+	public function insertSuppliers(array $collection){
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
@@ -1151,39 +926,22 @@ class StockManagementModel extends CoreModel{
 		}
 		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
 	}
+
 	/**
-	 * @name            updateStockAttributeValue ()
+	 * @param mixed $data
 	 *
-	 * @since           1.0.5
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->updateStockAttributeValues()
-	 *
-	 * @param           mixed           $data
-	 *
-	 * @return          mixed           $response
+	 * @return array
 	 */
 	public function updateStockAttributeValue($data){
 		return $this->updateStockAttributeValues(array($data));
 	}
 
 	/**
-	 * @name            updateProductAttributeValues ()
+	 * @param array $collection
 	 *
-	 * @since           1.0.5
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 *
-	 * @use             $this->createException()
-	 *
-	 * @param           array           $collection
-	 *
-	 * @return          array           $response
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function updateStockAttributeValues($collection){
+	public function updateStockAttributeValues(array $collection){
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
@@ -1261,39 +1019,22 @@ class StockManagementModel extends CoreModel{
 		}
 		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, time());
 	}
+
 	/**
-	 * @name            updateSupplier()
+	 * @param mixed $item
 	 *
-	 * @since           1.0.1
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           mixed   $item
-	 *
-	 * @return          array   $response
-	 *
+	 * @return array
 	 */
 	public function updateSupplier($item){
 		return $this->updateSuppliers(array($item));
 	}
 
 	/**
-	 * @name            updateSuppliers()
+	 * @param array $collection
 	 *
-	 * @since           1.0.1
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @param           array   $collection
-	 *
-	 * @return          array   $response
-	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function updateSuppliers($collection){
+	public function updateSuppliers(array $collection){
 		$timeStamp = time();
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
@@ -1330,24 +1071,13 @@ class StockManagementModel extends CoreModel{
 	}
 
 	/**
-	 * @name            doesStockExistWithQuantity ()
+	 * @param mixed $stock
+	 * @param int  $quantity
+	 * @param bool $bypass
 	 *
-	 * @since           1.0.2
-	 * @version         1.0.6
-	 *
-	 * @author          Can Berkol
-	 * @author          Said İmamoğlu
-	 *
-	 * @use             $this->listStocks()
-	 *
-	 *
-	 * @param           mixed   $stock
-	 * @param           int     $quantity
-	 * @param           bool    $bypass
-	 *
-	 * @return          mixed   $response
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse|bool
 	 */
-	public function doesStockExistWithQuantity($stock, $quantity, $bypass = false){
+	public function doesStockExistWithQuantity($stock, \integer $quantity, \bool $bypass = false){
 		$timeStamp = time();
 		$pModel = $this->get('productmanagement.model');
 		$response = $pModel->getStock($stock);
@@ -1388,114 +1118,4 @@ class StockManagementModel extends CoreModel{
 		}
 		return new ModelResponse(true, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
 	}
-
 }
-
-/**
- * Change Log
- * **************************************
- * v1.1.2                      27.07.2015
- * Can Berkol
- * **************************************
- * BF :: Wrong entity was being used in getSupplier query. Fixed.
- *
- * **************************************
- * v1.1.1                      23.07.2015
- * Can Berkol
- * **************************************
- * BF :: insertStockAttributeValues() was returning early response, due to a wrong error check. Fixed.
- *
- * **************************************
- * v1.1.0                      21.07.2015
- * Can Berkol
- * **************************************
- * BF :: update methods fixes.
- *
- * **************************************
- * v1.0.9                      14.07.2015
- * Said İmamoğlu
- * **************************************
- * FR :: listStockAttributeValuesOfProduct() added.
- *
- * **************************************
- * v1.0.8                      13.07.2015
- * Can Berkol
- * **************************************
- * BF :: typo fixed. ->exists to ->exist
- * FR :: insertStockAttributeValues() added.
- *
- * **************************************
- * v1.0.7                      01.07.2015
- * Said İmamoğlu
- * **************************************
- * CR :: Updates and bugfixes compatible with Core 3.3.
- *
- * **************************************
- * v1.0.6                      24.06.2015
- * Can Berkol
- * **************************************
- * CR :: Made compatible with Core 3.3.
- *
- * **************************************
- * v1.0.5                      Can Berkol
- * 17.11.2014
- * **************************************
- * A deleteAllAttributeValuesOfStockAttribute()
- * A doesStockAttributeValueExist()
- * A getAttributeValueOfStock()
- * A insertStockAttributeValue()
- * A insertStockAttributeValues()
- * A listStockAttributeValues()
- * A listStockAttributeValuesOfStock()
- * A updateStockAttributeValue()
- * A updateStockAttributeValues()
- * A validateAndGetStock()
- * A validateAndGetProductAttribute()
- *
- * **************************************
- * v1.0.4                      Can Berkol
- * 22.05.2014
- * **************************************
- * A updateStocks()
- *
- * **************************************
- * v1.0.3                      Can Berkol
- * 20.05.2014
- * **************************************
- * A listStocksOfProduct()
- * A listStocksOfProductFromSupplier(
- *
- * **************************************
- * v1.0.2                      Said İmamoğlu
- * 18.05.2014
- * **************************************
- * A doesStockExistWithQuantity()
- *
- * **************************************
- * v1.0.1                      Said İmamoğlu
- * 21.03.2014
- * **************************************
- * A deleteSupplier()
- * A deleteSuppliers()
- * A doesSupplierExist()
- * A getSupplier()
- * A listSuppliers()
- * A insertSupplier()
- * A insertSuppliers()
- * A updateSupplier()
- * A updateSuppliers()
- * **************************************
- * v1.0.0                      Said İmamoğlu
- * 19.03.2014
- * **************************************
- * A deleteStock()
- * A deleteStocks()
- * A doesStockExist()
- * A getStock()
- * A listStocks()
- * A insertStock()
- * A insertStocks()
- * A updateStock()
- * A updateStocks()
- *
- */

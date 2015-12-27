@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<skipper version="3.0.0.1104" mvc="Symfony2" orm="Doctrine2">
-  <module name="StockManagementBundle" import-format="Doctrine2Php" import-path="Entity" uuid="0f2a830e-feb4-4358-ba55-1084e3b5ea9e">
-    <entity name="Stock" description="Keeps track of stocks." uuid="7fa98806-4f29-472b-ad43-2853b2648925">
+<skipper version="3.2.4.1256" mvc="Symfony2" orm="Doctrine2">
+  <module name="\StockManagementBundle" local-name="StockManagementBundle" namespace="\BiberLtd\Bundle\StockManagementBundle\Entity" local-namespace="BiberLtd\Bundle\StockManagementBundle\Entity" export-format="Doctrine2Php" export-path="../Entity" uuid="0f2a830e-feb4-4358-ba55-1084e3b5ea9e">
+    <entity name="\BiberLtd\Bundle\StockManagementBundle\Entity\Stock" local-name="Stock" namespace="\BiberLtd\Bundle\StockManagementBundle\Entity" description="Keeps track of stocks." uuid="7fa98806-4f29-472b-ad43-2853b2648925">
       <field name="id" description="System given id." type="integer" size="20" required="true" unique="true" primary="true" auto-increment="true" uuid="e57b861f-8e5f-4786-93f8-98260857fbf9"/>
-      <field name="product" description="Product that stock belongs to." type="integer" size="15" uuid="4f83b3fd-26dc-4bf9-844c-a2a303af6a04"/>
+      <field name="product" description="Product that stock belongs to." type="integer" size="15" required="true" uuid="4f83b3fd-26dc-4bf9-844c-a2a303af6a04"/>
       <field name="sku" description="SKU." type="string" size="155" required="true" uuid="d15e28e5-595a-4cff-a64c-38e910674fec"/>
       <field name="supplier_sku" description="Supplier sku number." type="string" size="155" uuid="c7f4f423-4ced-493e-9398-6857a8e30e68"/>
       <field name="quantity" description="Quantity at hand." type="integer" size="10" default="0" required="true" uuid="a627bdc0-d119-4a53-afa8-fa917b8993ce"/>
@@ -13,20 +13,21 @@
       <field name="supplier" description="Supplier of stock." type="integer" size="10" uuid="6f2e3164-43d6-433e-a27e-1032e9f1569e"/>
       <field name="price" description="Most up to date price of stock." type="decimal" size="8" default="0" uuid="004a9579-a1c5-4c94-8efd-6b41f0577744"/>
       <field name="discount_price" description="Most up to date discounted prices of stock." type="decimal" size="8" default="0" uuid="a71023b8-b63e-48c3-b4c5-5dc5cb04212a"/>
-      <index name="idx_u_stock_id" unique="true">
+      <field name="sort_order" description="Sort order." type="integer" default="0" required="true" unsigned="true" uuid="68dcc277-d9e1-4878-b3e6-e2be8389f9d7"/>
+      <index name="idxUStockId" unique="true">
         <index-field name="id"/>
       </index>
-      <index name="idx_u_stock_product_sku" unique="true">
+      <index name="idxUStockSku" unique="true">
         <index-field name="product"/>
         <index-field name="sku"/>
       </index>
-      <index name="idx_n_stock_date_added">
+      <index name="idxNStockDateAdded">
         <index-field name="date_added"/>
       </index>
-      <index name="idx_n_stock_date_updated">
+      <index name="idxNStockDateUpdated">
         <index-field name="date_updated"/>
       </index>
-      <index name="idx_n_stock_date_removed">
+      <index name="idxNStockDateRemoved">
         <index-field name="date_removed"/>
       </index>
       <orm-attributes>
@@ -39,16 +40,16 @@
         </attribute>
       </orm-attributes>
     </entity>
-    <association from="Stock" to="Product" caption="idx_f_stock_product" inverse-alias="product" uuid="64887e68-ab89-45ed-bbbc-d9802a523c2d">
+    <association from="\BiberLtd\Bundle\StockManagementBundle\Entity\Stock" to="\Product" caption="idxFProductOfStock" inverse-alias="product" many-owner="true" many-inverse="false" parent-required="true" uuid="64887e68-ab89-45ed-bbbc-d9802a523c2d">
       <association-field from="product" to="id"/>
       <orm-attributes>
         <attribute name="on-delete">CASCADE</attribute>
       </orm-attributes>
     </association>
-    <association from="Stock" to="Supplier" caption="idx_f_stock_supplier" inverse-alias="supplier" uuid="aecef59f-8109-4c52-91d8-858df9f2cd1e">
+    <association from="\BiberLtd\Bundle\StockManagementBundle\Entity\Stock" to="\BiberLtd\Bundle\StockManagementBundle\Entity\Supplier" caption="idxFSupplierOfStock" inverse-alias="supplier" many-owner="true" many-inverse="false" uuid="aecef59f-8109-4c52-91d8-858df9f2cd1e">
       <association-field from="supplier" to="id"/>
     </association>
-    <entity name="Supplier" description="Stores supplier information." uuid="0587d7e0-3c09-4415-b829-08e6e02da6fb">
+    <entity name="\BiberLtd\Bundle\StockManagementBundle\Entity\Supplier" local-name="Supplier" namespace="\BiberLtd\Bundle\StockManagementBundle\Entity" description="Stores supplier information." uuid="0587d7e0-3c09-4415-b829-08e6e02da6fb">
       <field name="id" description="System given id." type="integer" size="10" enum-values=" " required="true" unique="true" primary="true" auto-increment="true" uuid="1078f313-558f-4f17-8d7c-13869c8d2ef4"/>
       <field name="name" description="Name of supplier." type="string" size="155" required="true" uuid="011a2f10-abe9-42e0-b76e-a025f95afbf8"/>
       <field name="description" description="Description of supplier." type="string" size="255" uuid="30bda892-6641-4a41-84de-3c6ffa3c5d71"/>
@@ -66,6 +67,35 @@
         </attribute>
       </orm-attributes>
     </entity>
+    <entity name="\BiberLtd\Bundle\StockManagementBundle\Entity\StockAttributeValue" local-name="StockAttributeValue" namespace="\BiberLtd\Bundle\StockManagementBundle\Entity" description="Associates product attributes with stocks and corresponding values." uuid="bf4deae3-debc-46b8-b08f-a8a17ca0f1e1">
+      <field name="id" type="integer" size="10" default="System defined id." required="true" unique="true" primary="true" unsigned="true" auto-increment="true" uuid="70352738-8c8e-4dec-92e0-71378c4a8012"/>
+      <field name="value" type="string" default="Value of stock attribute" required="true" uuid="1913d883-37f9-43a2-883a-29c93721a94e"/>
+      <field name="sort_order" type="integer" default="Custom sort order." required="true" unsigned="true" uuid="4cec2bb2-5ee1-4cbd-bf01-0c1ffd33fbc2"/>
+      <field name="language" type="integer" size="5" unique="true" uuid="d3343c53-facd-4c75-ab65-51b752285ce4"/>
+      <field name="attribute" type="integer" size="10" unique="true" uuid="18afbe73-c0b7-473b-bca6-fa42b4bd10a1"/>
+      <field name="stock" type="integer" size="20" unique="true" uuid="41aeba0f-e017-4057-a60d-90509d7a36db"/>
+      <index name="idxUStockAttributeValueId" unique="true">
+        <index-field name="id"/>
+      </index>
+    </entity>
+    <association from="\BiberLtd\Bundle\StockManagementBundle\Entity\StockAttributeValue" to="\BiberLtd\Bundle\MultiLanguageSupportBundle\Entity\Language" caption="idxFLanguageOfStockAttributeValue" inverse-alias="language" many-owner="false" many-inverse="false" uuid="ff2216de-61d6-4b22-940e-9bc8f7199f8a">
+      <association-field from="language" to="id"/>
+      <orm-attributes>
+        <attribute name="on-delete">CASCADE</attribute>
+      </orm-attributes>
+    </association>
+    <association from="\BiberLtd\Bundle\StockManagementBundle\Entity\StockAttributeValue" to="\ProductAttribute" caption="idxFAttributeOfStockAttributeValue" inverse-alias="attribute" many-owner="false" many-inverse="false" uuid="faa35a36-c3d4-4ac8-b41e-c673f8d33fc1">
+      <association-field from="attribute" to="id"/>
+      <orm-attributes>
+        <attribute name="on-delete">CASCADE</attribute>
+      </orm-attributes>
+    </association>
+    <association from="\BiberLtd\Bundle\StockManagementBundle\Entity\StockAttributeValue" to="\BiberLtd\Bundle\StockManagementBundle\Entity\Stock" caption="idxFStockOfStockAttributeValue" inverse-alias="stock" many-owner="false" many-inverse="false" uuid="5e1df0ed-e712-4bc2-983a-89dac01fc328">
+      <association-field from="stock" to="id"/>
+      <orm-attributes>
+        <attribute name="on-delete">CASCADE</attribute>
+      </orm-attributes>
+    </association>
     <orm-attributes>
       <attribute name="namespace">BiberLtd\Bundle\StockManagementBundle\Entity</attribute>
       <attribute name="filename-format">entity-name-only</attribute>
@@ -73,8 +103,9 @@
     </orm-attributes>
   </module>
   <visual-data>
-    <entity uuid="0587d7e0-3c09-4415-b829-08e6e02da6fb" bg-color="4294967295" hdr-color="4292006610" position-x="350" position-y="50" size-x="0" size-x2="123" size-y="0" size-y2="73"/>
-    <module uuid="0f2a830e-feb4-4358-ba55-1084e3b5ea9e" bg-color="4293458655" size-x="0" size-x2="650" size-y="0" size-y2="400"/>
-    <entity uuid="7fa98806-4f29-472b-ad43-2853b2648925" bg-color="4294967295" hdr-color="4292006610" position-x="100" position-y="50" size-x="0" size-x2="130" size-y="0" size-y2="129"/>
+    <entity uuid="0587d7e0-3c09-4415-b829-08e6e02da6fb" bg-color="4294967295" hdr-color="4292006610" position-x="377" position-y="250" size-x="0" size-x2="123" size-y="0" size-y2="73"/>
+    <entity uuid="7fa98806-4f29-472b-ad43-2853b2648925" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="100" position-y="50" size-x="0" size-x2="130" size-y="0" size-y2="129"/>
+    <entity uuid="bf4deae3-debc-46b8-b08f-a8a17ca0f1e1" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="377" position-y="50" size-x="0" size-x2="20" size-y="0" size-y2="20"/>
+    <module uuid="0f2a830e-feb4-4358-ba55-1084e3b5ea9e" bg-color="#E8FADF" size-x="0" size-x2="650" size-y="0" size-y2="400"/>
   </visual-data>
 </skipper>

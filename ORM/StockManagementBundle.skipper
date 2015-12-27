@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<skipper version="3.2.4.1256" mvc="Symfony2" orm="Doctrine2" name="StockManagementBundle" uuid="5be757cc-db2c-4131-8eb9-b4b8ef8e178d">
+  <external-module storage-path="../../site-management-bundle/ORM/SiteManagement.module.xml"/>
+  <external-module storage-path="../../multilanguage-support-bundle/ORM/MultiLanguageSupport.module.xml"/>
+  <external-module storage-path="../../file-management-bundle/ORM/FileManagement.module.xml"/>
+  <external-module storage-path="../../member-management-bundle/ORM/MemberManagement.module.xml"/>
+  <external-module storage-path="../../product-management-bundle/ORM/ProductManagement.module.xml"/>
+  <external-module storage-path="stockmanagement.module.xml"/>
+  <visual-data>
+    <association uuid="00219d56-949c-48cd-a37a-2f379cab16ec" color="#969696"/>
+    <association uuid="0132b5a4-c206-4f06-bcf7-08bf61d249f3" color="#969696"/>
+    <association uuid="0193716e-9fc7-4858-a23c-15c14d9270ce" color="#969696"/>
+    <association uuid="02e3ef16-39f8-42b5-891d-96224803b169" color="#969696"/>
+    <association uuid="0eb05669-2c51-49dc-9baf-88edaf1a74ba" color="#969696"/>
+    <association uuid="14af7ccd-120f-476b-bf71-7632fb151220" color="#969696"/>
+    <association uuid="1bc49ece-cade-4d01-b739-aa1d5fe2d1e9" color="#969696"/>
+    <association uuid="1f0350dc-9c72-48ba-abce-f8eaef6689dc" color="#969696"/>
+    <association uuid="1f496e54-ba0c-472d-a55f-db00287e9014" color="#969696"/>
+    <association uuid="238a4721-3792-4a5b-b65e-81b2d9eba953" color="#969696"/>
+    <association uuid="2e4250bb-0af2-49a9-bb56-90ff793474be" color="#969696"/>
+    <association uuid="30c08aaf-e94b-4f4a-87a4-5f62fe77113b" color="#969696"/>
+    <association uuid="33e6dd4a-056c-4513-ad3a-f9a2632ffa57" color="#969696"/>
+    <association uuid="3534aca0-24b7-42e2-8fae-bee6d480eafb" color="#969696"/>
+    <association uuid="3b152a02-3044-4b53-ade0-2b1670e9ecc3" color="#969696"/>
+    <association uuid="41a3d993-2696-4ce9-a68b-2a2546b61166" color="#969696"/>
+    <association uuid="45c125cd-0ba3-4a9c-973e-92bbcfb91a59" color="#969696"/>
+    <association uuid="470e3e96-7a47-422c-b4a7-4cdef7b62939" color="#969696"/>
+    <association uuid="4a21a97e-810e-4e2d-a330-69d23cf801c7" color="#969696"/>
+    <association uuid="5c053399-bdfe-4fd2-b79b-2eebb1c870ef" color="#969696"/>
+    <association uuid="5d9fbbab-e6e7-446b-b35a-5a92b2665907" color="#969696"/>
+    <association uuid="5e1df0ed-e712-4bc2-983a-89dac01fc328" color="#969696"/>
+    <association uuid="5e9d566d-86ce-46ec-acec-b61d968fb34e" color="#969696"/>
+    <association uuid="5f16c0a9-34a7-43d5-84ac-afb2ca4ee191" color="#969696"/>
+    <association uuid="6164e2b3-f5a2-4938-90dc-5023e1ab8d87" color="#969696"/>
+    <association uuid="64887e68-ab89-45ed-bbbc-d9802a523c2d" color="#969696"/>
+    <association uuid="691cd89a-3534-4a4c-bf70-544fa15a4c35" color="#969696"/>
+    <association uuid="71f15a54-6bc9-4510-84b1-2b2817781440" color="#969696"/>
+    <association uuid="7ce2c176-5fc7-4c80-84e1-7bb3305de122" color="#969696"/>
+    <association uuid="7f2dacf7-b140-408d-bd13-4fa5a6d1a44c" color="#969696"/>
+    <association uuid="804845fb-f53d-4ae3-923e-e8d8a46ebef1" color="#969696"/>
+    <association uuid="840c7489-cc34-4e4b-898b-01b810449cd7" color="#969696"/>
+    <association uuid="8900df27-8d92-4a35-99f3-837cef9ae4f7" color="#969696"/>
+    <association uuid="90fa7d86-109a-4dee-8f53-eb1712691b6f" color="#969696"/>
+    <association uuid="93fd6dcc-590e-4490-ad0f-03a9b480fa94" color="#969696"/>
+    <association uuid="98d48d17-f488-4b18-833f-1671af44d614" color="#969696"/>
+    <association uuid="9aa319f9-0057-4338-9baa-01096d251a53" color="#969696"/>
+    <association uuid="a4613ba6-5969-4a2b-af9e-bc9132f1c1cf" color="#969696"/>
+    <association uuid="a50bcd82-290b-4009-b270-6e47a63148cc" color="#969696"/>
+    <association uuid="aa3357dd-d8f5-456f-ac6d-5ddd8f46fbde" color="#969696"/>
+    <association uuid="ae4257ec-40ad-4a53-95bc-43688e025441" color="#969696"/>
+    <association uuid="aecef59f-8109-4c52-91d8-858df9f2cd1e" color="#969696"/>
+    <association uuid="b1bb0d0b-841e-42dd-9eb4-9e33e559358b" color="#969696"/>
+    <association uuid="b210e152-462a-45f8-b840-75b0217b73c5" color="#969696"/>
+    <association uuid="b9e4d241-2e4f-4fbf-a78c-0414234947d6" color="#969696"/>
+    <association uuid="c14f5878-4dee-4629-a7eb-85530f7eac9d" caption1-position-x="0" caption1-position-y="0" center-position-x="0" center-position-y="-20" color="#969696"/>
+    <association uuid="c1b65194-633a-4b05-8045-532b4b8d4847" color="#969696"/>
+    <association uuid="c8028be7-5ae1-4cec-876f-f2ede71ad79f" color="#969696"/>
+    <association uuid="cd03db2c-7b7b-4448-9a6d-05afdd69d069" color="#969696"/>
+    <association uuid="cd249b46-dc20-4984-9105-8f1fa3b4dedf" color="#969696"/>
+    <association uuid="d0a6295c-5f68-40e3-bfb4-da2ca6e40fb6" color="#969696"/>
+    <association uuid="d120204e-3d7c-47ea-bfe6-c33110876e00" color="#969696"/>
+    <association uuid="dcbf1caf-6474-4dfe-90be-7b58aa71c5c7" color="#969696"/>
+    <association uuid="e167335a-3e8d-4bd4-8fd9-1c391b514969" color="#969696"/>
+    <association uuid="e2c72d09-406c-495e-8e08-e9040c7710f3" color="#969696"/>
+    <association uuid="e3c61ead-3ee4-4349-8be9-ae96cbf3eb3a" color="#969696"/>
+    <association uuid="e4252e7a-8190-4bbb-a9a3-4c751d015dc3" color="#969696"/>
+    <association uuid="e5582ebd-a1fb-44b2-b45d-edd45512cf0f" color="#969696"/>
+    <association uuid="e615dfba-7f2b-4dac-a61b-519c9538e9f0" color="#969696"/>
+    <association uuid="e759f273-144f-4e29-817a-0fe9f39c4187" color="#969696"/>
+    <association uuid="faa35a36-c3d4-4ac8-b41e-c673f8d33fc1" color="#969696"/>
+    <association uuid="fbb3c492-f148-4658-89df-2ee3d75761d0" color="#969696"/>
+    <association uuid="ff2216de-61d6-4b22-940e-9bc8f7199f8a" color="#969696"/>
+    <module uuid="0f2a830e-feb4-4358-ba55-1084e3b5ea9e" position-x="5073" position-y="50"/>
+    <module uuid="264804cf-5ddd-4089-aaa2-d7c0f129a5ed" position-x="640" position-y="106"/>
+    <module uuid="860bb986-ef71-4cef-9da2-f560e58c2569" position-x="50" position-y="50"/>
+    <module uuid="9741bde0-dba7-4022-9b83-7ddfcd40a5c4" position-x="3161" position-y="57"/>
+    <module uuid="9d574194-22af-4673-a2ee-bb67ec7d212e" position-x="1466" position-y="51"/>
+    <module uuid="d40aa0eb-3691-4818-880c-0a9ad1dd9833" position-x="2261" position-y="99"/>
+    <project uuid="5be757cc-db2c-4131-8eb9-b4b8ef8e178d" size-x="0" size-x2="5773" size-y="0" size-y2="1250"/>
+  </visual-data>
+</skipper>

@@ -1,3 +1,0 @@
-biberltd_core_stock_management_manage:
-    pattern:  /stock
-    defaults: { _controller: BiberLtdCoreBundlesStockManagementBundle:Test:test }

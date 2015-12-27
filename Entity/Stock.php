@@ -1,18 +1,11 @@
 <?php
 /**
- * @name        Stock
- * @package     BiberLtd\Bundle\StockManagementBundle\Entity
+ * @author		Can Berkol
  *
- * @author      Can Berkol
- *              Murat Ünal
- * @version     1.0.1
- * @date        07.07.2015
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
  *
- * @copyright   Biber Ltd. (http://www.biberltd.com)
- * @license     GPL v3.0
- *
- * @description Model / Entity class.
- *
+ * @date        27.12.2015
  */
 namespace BiberLtd\Bundle\StockManagementBundle\Entity;
 use Doctrine\ORM\Mapping AS ORM;
@@ -20,16 +13,16 @@ use BiberLtd\Bundle\CoreBundle\CoreEntity;
 /** 
  * @ORM\Entity
  * @ORM\Table(
- *     name="stock", 
- *     options={"charset":"utf8","collate":"utf8_turkish_ci","engine":"innodb"}, 
+ *     name="stock",
+ *     options={"charset":"utf8","collate":"utf8_turkish_ci","engine":"innodb"},
  *     indexes={
- *         @ORM\Index(name="idx_n_stock_date_added", columns={"date_added"}),
- *         @ORM\Index(name="idx_n_stock_date_updated", columns={"date_updated"}),
- *         @ORM\Index(name="idx_n_stock_date_removed", columns={"date_removed"})
- *     }, 
+ *         @ORM\Index(name="idxNStockDateAdded", columns={"date_added"}),
+ *         @ORM\Index(name="idxNStockDateUpdated", columns={"date_updated"}),
+ *         @ORM\Index(name="idxNStockDateRemoved", columns={"date_removed"})
+ *     },
  *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="idx_u_stock_id", columns={"id"}),
- *         @ORM\UniqueConstraint(name="idx_u_stock_product_sku", columns={"product","sku"})
+ *         @ORM\UniqueConstraint(name="idxUStockId", columns={"id"}),
+ *         @ORM\UniqueConstraint(name="idxUStockSku", columns={"product","sku"})
  *     }
  * )
  */
@@ -37,84 +30,85 @@ class Stock extends CoreEntity
 {
     /** 
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", length=20)
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @var int
      */
     private $id;
 
     /** 
      * @ORM\Column(type="string", length=155, nullable=false)
+     * @var string
      */
     private $sku;
 
     /** 
      * @ORM\Column(type="string", length=155, nullable=true)
+     * @vr string
      */
     private $supplier_sku;
 
     /** 
-     * @ORM\Column(type="integer", length=10, nullable=false)
+     * @ORM\Column(type="integer", length=10, nullable=false, options={"default":0})
+     * @var int
      */
     private $quantity;
 
     /** 
      * @ORM\Column(type="datetime", nullable=false)
+     * @var \DateTime
      */
     public $date_added;
 
     /** 
      * @ORM\Column(type="datetime", nullable=false)
+     * @var \DateTime
      */
     public $date_updated;
 
     /** 
      * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
      */
     public $date_removed;
 
     /** 
-     * @ORM\Column(type="decimal", length=8, nullable=true)
+     * @ORM\Column(type="decimal", length=8, nullable=true, options={"default":0})
+     * @var float
      */
     private $price;
 
     /** 
-     * @ORM\Column(type="decimal", length=8, nullable=true)
+     * @ORM\Column(type="decimal", length=8, nullable=true, options={"default":0})
+     * @var float
      */
     private $discount_price;
 
     /** 
-     * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\ProductManagementBundle\Entity\Product")
-     * @ORM\JoinColumn(name="product", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Product")
+     * @ORM\JoinColumn(name="product", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @var \BiberLtd\Bundle\ProductManagementBundle\Entity\Product
      */
     private $product;
 
     /**
-     * @ORM\Column(type="integer", length=10, nullable=false)
+     * @ORM\Column(type="integer", nullable=false, options={"default":0,"unsigned":true})
+     * @var int
      */
     private $sort_order;
     /** 
      * @ORM\ManyToOne(targetEntity="BiberLtd\Bundle\StockManagementBundle\Entity\Supplier")
      * @ORM\JoinColumn(name="supplier", referencedColumnName="id")
+     * @var \BiberLtd\Bundle\StockManagementBundle\Entity\Supplier
      */
     private $supplier;
 
     /**
-     * @name                  setDiscountPrice ()
-     *                                         Sets the discount_price property.
-     *                                         Updates the data only if stored value and value to be set are different.
+     * @param float $discount_price
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $discount_price
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setDiscountPrice($discount_price) {
+    public function setDiscountPrice(\float $discount_price) {
         if($this->setModified('discount_price', $discount_price)->isModified()) {
             $this->discount_price = $discount_price;
         }
@@ -123,50 +117,25 @@ class Stock extends CoreEntity
     }
 
     /**
-     * @name            getDiscountPrice ()
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->discount_price
+     * @return float
      */
     public function getDiscountPrice() {
         return $this->discount_price;
     }
 
     /**
-     * @name            getId()
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->id
+     * @return int
      */
     public function getId() {
         return $this->id;
     }
 
     /**
-     * @name                  setPrice ()
-     *                                 Sets the price property.
-     *                                 Updates the data only if stored value and value to be set are different.
+     * @param float $price
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $price
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setPrice($price) {
+    public function setPrice(\float $price) {
         if($this->setModified('price', $price)->isModified()) {
             $this->price = $price;
         }
@@ -175,37 +144,18 @@ class Stock extends CoreEntity
     }
 
     /**
-     * @name            getPrice ()
-     *                           Returns the value of price property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->price
+     * @return float
      */
     public function getPrice() {
         return $this->price;
     }
 
     /**
-     * @name                  setProduct ()
-     *                                   Sets the product property.
-     *                                   Updates the data only if stored value and value to be set are different.
+     * @param \BiberLtd\Bundle\ProductManagementBundle\Entity\Product $product
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $product
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setProduct($product) {
+    public function setProduct(\BiberLtd\Bundle\ProductManagementBundle\Entity\Product $product) {
         if($this->setModified('product', $product)->isModified()) {
             $this->product = $product;
         }
@@ -214,37 +164,18 @@ class Stock extends CoreEntity
     }
 
     /**
-     * @name            getProduct ()
-     *                             Returns the value of product property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->product
+     * @return \BiberLtd\Bundle\ProductManagementBundle\Entity\Product
      */
     public function getProduct() {
         return $this->product;
     }
 
     /**
-     * @name            setQuantity ()
-     *                  Sets the quantity property.
-     *                  Updates the data only if stored value and value to be set are different.
+     * @param int $quantity
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $quantity
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setQuantity($quantity) {
+    public function setQuantity(\integer $quantity) {
         if($this->setModified('quantity', $quantity)->isModified()) {
             $this->quantity = $quantity;
         }
@@ -253,37 +184,18 @@ class Stock extends CoreEntity
     }
 
     /**
-     * @name            getQuantity ()
-     *                  Returns the value of quantity property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->quantity
+     * @return int
      */
     public function getQuantity() {
         return $this->quantity;
     }
 
     /**
-     * @name                  setSku ()
-     *                               Sets the sku property.
-     *                               Updates the data only if stored value and value to be set are different.
+     * @param string $sku
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $sku
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setSku($sku) {
+    public function setSku(\string $sku) {
         if($this->setModified('sku', $sku)->isModified()) {
             $this->sku = $sku;
         }
@@ -292,29 +204,14 @@ class Stock extends CoreEntity
     }
 
     /**
-     * @name            getSku ()
-     *                  Returns the value of sku property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->sku
+     * @return string
      */
     public function getSku() {
         return $this->sku;
     }
 
     /**
-     * @name        getSortOrder ()
-     *
-     * @author      Said İmamoğlu
-     *
-     * @since       1.0.0
-     * @version     1.0.0
-     *
-     * @return      mixed
+     * @return int
      */
     public function getSortOrder()
     {
@@ -322,18 +219,11 @@ class Stock extends CoreEntity
     }
 
     /**
-     * @name        setSortOrder ()
+     * @param int $sort_order
      *
-     * @author      Said İmamoğlu
-     *
-     * @since       1.0.0
-     * @version     1.0.0
-     *
-     * @param       mixed $sort_order
-     *
-     * @return      $this
+     * @return $this
      */
-    public function setSortOrder($sort_order)
+    public function setSortOrder(\integer $sort_order)
     {
         if (!$this->setModified('sort_order', $sort_order)->isModified()) {
             return $this;
@@ -343,22 +233,11 @@ class Stock extends CoreEntity
     }
 
     /**
-     * @name            setSupplier ()
-     *                  Sets the supplier property.
-     *                  Updates the data only if stored value and value to be set are different.
+     * @param \BiberLtd\Bundle\StockManagementBundle\Entity\Supplier $supplier
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $supplier
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setSupplier($supplier) {
+    public function setSupplier(\BiberLtd\Bundle\StockManagementBundle\Entity\Supplier $supplier) {
         if($this->setModified('supplier', $supplier)->isModified()) {
             $this->supplier = $supplier;
         }
@@ -367,37 +246,18 @@ class Stock extends CoreEntity
     }
 
     /**
-     * @name            getSupplier ()
-     *                  Returns the value of supplier property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->supplier
+     * @return \BiberLtd\Bundle\StockManagementBundle\Entity\Supplier
      */
     public function getSupplier() {
         return $this->supplier;
     }
 
     /**
-     * @name                  setSupplierSku ()
-     *                        Sets the supplier_sku property.
-     *                        Updates the data only if stored value and value to be set are different.
+     * @param string $supplier_sku
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @use             $this->setModified()
-     *
-     * @param           mixed $supplier_sku
-     *
-     * @return          object                $this
+     * @return $this
      */
-    public function setSupplierSku($supplier_sku) {
+    public function setSupplierSku(\string $supplier_sku) {
         if($this->setModified('supplier_sku', $supplier_sku)->isModified()) {
             $this->supplier_sku = $supplier_sku;
         }
@@ -406,24 +266,9 @@ class Stock extends CoreEntity
     }
 
     /**
-     * @name            getSupplierSku ()
-     *                                 Returns the value of supplier_sku property.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          mixed           $this->supplier_sku
+     * @return mixed
      */
     public function getSupplierSku() {
         return $this->supplier_sku;
     }
 }
-/** *************************************
- * v1.0.1                      13.07.2015
- * Can Berkol
- * **************************************
- * BF :: Typo fixed in setSortOrder() modifiled => modified
- *
- */
