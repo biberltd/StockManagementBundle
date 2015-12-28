@@ -753,6 +753,51 @@ class StockManagementModel extends CoreModel{
 		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
 	}
 	/**
+	 * @param mixed $product
+	 * @param mixed $language
+	 * @param array|null $filter
+	 * @param array|null $sortOrder
+	 * @param array|null $limit
+	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+	 */
+	public function listStockAttributeValuesOfProductInLanguage($product, $language, array $filter = null, array $sortOrder = null, array $limit = null){
+		$pModel = $this->kernel->getContainer()->get('productmanagement.model');
+		$response = $pModel->getProduct($product);
+		if($response->error->exist){
+			return $response;
+		}
+		$product= $response->result->set;
+		$lModel = $this->kernel->getContainer()->get('multilanguagesupport.model');
+		$response = $lModel->getLanguage($language);
+		if($response->error->exist){
+			return $response;
+		}
+		$language= $response->result->set;
+		$sopResponse = $this->listStocksOfProduct($product, $sortOrder);
+		if ($sopResponse->error->exist) {
+			return $sopResponse;
+		}
+		foreach ($sopResponse->result->set as $sopEntity) {
+			$stockIds[] = $sopEntity->getId();
+		}
+		unset($response);
+		$filter[] = array(
+			'glue' => 'and',
+			'condition' => array(
+				array(
+					'glue' => 'and',
+					'condition' => array('column' => $this->entity['sav']['alias'] . '.stock', 'comparison' => 'in', 'value' => $stockIds),
+				),
+				array(
+					'glue'      => 'and',
+					'condition' => array('column' => $this->entity['sav']['alias'] . '.language', 'comparison' => '=', 'value' => $language->getId()),
+				)
+			)
+		);
+		return $this->listStockAttributeValues($filter, $sortOrder, $limit);
+	}
+	/**
 	 * @name            getStockAttributeValue ()
 	 *
 	 * @since           1.0.5
