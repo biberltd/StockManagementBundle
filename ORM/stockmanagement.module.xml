@@ -106,6 +106,6 @@
     <entity uuid="0587d7e0-3c09-4415-b829-08e6e02da6fb" bg-color="4294967295" hdr-color="4292006610" position-x="377" position-y="250" size-x="0" size-x2="123" size-y="0" size-y2="73"/>
     <entity uuid="7fa98806-4f29-472b-ad43-2853b2648925" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="100" position-y="50" size-x="0" size-x2="130" size-y="0" size-y2="129"/>
     <entity uuid="bf4deae3-debc-46b8-b08f-a8a17ca0f1e1" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="377" position-y="50" size-x="0" size-x2="20" size-y="0" size-y2="20"/>
-    <module uuid="0f2a830e-feb4-4358-ba55-1084e3b5ea9e" bg-color="#E8FADF" size-x="0" size-x2="650" size-y="0" size-y2="400"/>
+    <module uuid="0f2a830e-feb4-4358-ba55-1084e3b5ea9e" bg-color="#E8FADF" size-x="0" size-x2="650" size-y="0" size-y2="443"/>
   </visual-data>
 </skipper>
