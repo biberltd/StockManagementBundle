@@ -108,7 +108,7 @@ class Stock extends CoreEntity
      *
      * @return $this
      */
-    public function setDiscountPrice(\float $discount_price) {
+    public function setDiscountPrice(float $discount_price) {
         if($this->setModified('discount_price', $discount_price)->isModified()) {
             $this->discount_price = $discount_price;
         }
@@ -135,7 +135,7 @@ class Stock extends CoreEntity
      *
      * @return $this
      */
-    public function setPrice(\float $price) {
+    public function setPrice(float $price) {
         if($this->setModified('price', $price)->isModified()) {
             $this->price = $price;
         }
@@ -175,7 +175,7 @@ class Stock extends CoreEntity
      *
      * @return $this
      */
-    public function setQuantity(\integer $quantity) {
+    public function setQuantity(int $quantity) {
         if($this->setModified('quantity', $quantity)->isModified()) {
             $this->quantity = $quantity;
         }
@@ -195,7 +195,7 @@ class Stock extends CoreEntity
      *
      * @return $this
      */
-    public function setSku(\string $sku) {
+    public function setSku(string $sku) {
         if($this->setModified('sku', $sku)->isModified()) {
             $this->sku = $sku;
         }
@@ -223,7 +223,7 @@ class Stock extends CoreEntity
      *
      * @return $this
      */
-    public function setSortOrder(\integer $sort_order)
+    public function setSortOrder(int $sort_order)
     {
         if (!$this->setModified('sort_order', $sort_order)->isModified()) {
             return $this;
@@ -257,7 +257,7 @@ class Stock extends CoreEntity
      *
      * @return $this
      */
-    public function setSupplierSku(\string $supplier_sku) {
+    public function setSupplierSku(string $supplier_sku) {
         if($this->setModified('supplier_sku', $supplier_sku)->isModified()) {
             $this->supplier_sku = $supplier_sku;
         }

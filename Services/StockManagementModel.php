@@ -34,7 +34,7 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function deleteAllAttributeValuesOfStockAttribute($attribute, $stock){
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		$pModel = $this->get('productmanagement.model');
 		$response = $pModel->getProductAttribute($attribute);
 		if($response->error->exist){
@@ -54,10 +54,10 @@ class StockManagementModel extends CoreModel{
 		$q = $this->em->createQuery($qStr);
 		$result = $q->getResult();
 		if($result === false){
-			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -75,7 +75,7 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function deleteStocks(array $collection) {
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -95,11 +95,11 @@ class StockManagementModel extends CoreModel{
 			}
 		}
 		if($countDeleted < 0){
-			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, microtime(true));
 		}
 		$this->em->flush();
 
-		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -110,7 +110,7 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listStocks(array $filter = null, array $sortOrder = null, array $limit = null){
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
 		}
@@ -157,9 +157,9 @@ class StockManagementModel extends CoreModel{
 
 		$totalRows = count($result);
 		if ($totalRows < 1) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, microtime(true));
 		}
-		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -251,7 +251,7 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function getAttributeValueOfStock($attribute, $stock, $language){
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		$pModel = $this->kernel->getContainer()->get('productmanagement.model');
 		$response = $pModel->getProductAttribute($attribute);
 		if($response->error->exist){
@@ -285,9 +285,9 @@ class StockManagementModel extends CoreModel{
 		$result = $query->getResult();
 		$totalRows = count($result);
 		if ($totalRows < 1) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, microtime(true));
 		}
-		return new ModelResponse($result[0], $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($result[0], $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -296,9 +296,9 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function getStock($stock){
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if($stock instanceof BundleEntity\Stock){
-			return new ModelResponse($stock, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+			return new ModelResponse($stock, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 		}
 		$result = null;
 		switch($stock){
@@ -316,10 +316,10 @@ class StockManagementModel extends CoreModel{
 				break;
 		}
 		if(is_null($result)){
-			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, time());
+			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -330,8 +330,8 @@ class StockManagementModel extends CoreModel{
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse|bool
 	 */
-	public function doesStockAttributeValueExist($attribute, $stock, $language, \bool $bypass = false){
-		$timeStamp = time();
+	public function doesStockAttributeValueExist($attribute, $stock, $language, bool $bypass = false){
+		$timeStamp = microtime(true);
 		$exist = false;
 		$response = $this->getAttributeValueOfStock($attribute, $stock, $language);
 		if ($response->error->exist) {
@@ -347,7 +347,7 @@ class StockManagementModel extends CoreModel{
 		if ($bypass) {
 			return $exist;
 		}
-		return new ModelResponse(true, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse(true, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -356,8 +356,8 @@ class StockManagementModel extends CoreModel{
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse|bool
 	 */
-	public function doesStockExist($item, \bool $bypass = false){
-		$timeStamp = time();
+	public function doesStockExist($item, bool $bypass = false){
+		$timeStamp = microtime(true);
 		$exist = false;
 
 		$response = $this->getStock($item);
@@ -375,7 +375,7 @@ class StockManagementModel extends CoreModel{
 		if ($bypass) {
 			return $exist;
 		}
-		return new ModelResponse(true, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse(true, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -393,7 +393,7 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function insertStocks(array $collection){
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		$countInserts = 0;
 		foreach ($collection as $data) {
 			if ($data instanceof BundleEntity\Stock) {
@@ -439,9 +439,9 @@ class StockManagementModel extends CoreModel{
 		}
 		if($countInserts > 0){
 			$this->em->flush();
-			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, time());
+			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, microtime(true));
 		}
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -459,7 +459,7 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function updateStocks(array $collection){
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		$countUpdates = 0;
 		foreach ($collection as $data) {
 			if ($data instanceof BundleEntity\Stock) {
@@ -513,9 +513,9 @@ class StockManagementModel extends CoreModel{
 
 		if($countUpdates > 0){
 			$this->em->flush();
-			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, time());
+			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, microtime(true));
 		}
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -533,7 +533,7 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function deleteSuppliers(array $collection){
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -553,11 +553,11 @@ class StockManagementModel extends CoreModel{
 			}
 		}
 		if($countDeleted < 0){
-			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:E:001', 'Unable to delete all or some of the selected entries.', $timeStamp, microtime(true));
 		}
 		$this->em->flush();
 
-		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, false, 'S:D:001', 'Selected entries have been successfully removed from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -568,7 +568,7 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listSuppliers(array $filter = null, array $sortOrder = null, array $limit = null){
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
 		}
@@ -607,9 +607,9 @@ class StockManagementModel extends CoreModel{
 
 		$totalRows = count($result);
 		if ($totalRows < 1) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, microtime(true));
 		}
-		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -617,17 +617,17 @@ class StockManagementModel extends CoreModel{
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-	public function getStockAttributeValue(\integer $id){
-		$timeStamp = time();
+	public function getStockAttributeValue(int $id){
+		$timeStamp = microtime(true);
 
 		$result = $this->em->getRepository($this->entity['sav']['name'])
 			->findOneBy(array('id' => $id));
 
 		if(is_null($result)){
-			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, time());
+			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -636,9 +636,9 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function getSupplier($supplier){
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if($supplier instanceof BundleEntity\Supplier){
-			return new ModelResponse($supplier, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+			return new ModelResponse($supplier, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 		}
 		$result = null;
 		switch($supplier){
@@ -650,10 +650,10 @@ class StockManagementModel extends CoreModel{
 				break;
 		}
 		if(is_null($result)){
-			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, time());
+			return new ModelResponse($result, 0, 0, null, true, 'E:D:002', 'Unable to find request entry in database.', $timeStamp, microtime(true));
 		}
 
-		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($result, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -664,7 +664,7 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function listStockAttributeValues(array $filter = null ,array $sortOrder = null, array $limit = null){
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($sortOrder) && !is_null($sortOrder)) {
 			return $this->createException('InvalidSortOrderException', '$sortOrder must be an array with key => value pairs where value can only be "asc" or "desc".', 'E:S:002');
 		}
@@ -710,9 +710,9 @@ class StockManagementModel extends CoreModel{
 
 		$totalRows = count($result);
 		if ($totalRows < 1) {
-			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, time());
+			return new ModelResponse(null, 0, 0, null, true, 'E:D:002', 'No entries found in database that matches to your criterion.', $timeStamp, microtime(true));
 		}
-		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse($result, $totalRows, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 
 	}
 
@@ -829,8 +829,8 @@ class StockManagementModel extends CoreModel{
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse|bool
 	 */
-	public function doesSupplierExist($item, \bool $bypass = false){
-		$timeStamp = time();
+	public function doesSupplierExist($item, bool $bypass = false){
+		$timeStamp = microtime(true);
 		$exist = false;
 
 		$response = $this->getStock($item);
@@ -848,7 +848,7 @@ class StockManagementModel extends CoreModel{
 		if ($bypass) {
 			return $exist;
 		}
-		return new ModelResponse(true, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse(true, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -866,9 +866,9 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function insertStockAttributeValues(array $collection){
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		$countInserts = 0;
-		$insertedItems = array();
+		$insertedItems = [];
 		foreach ($collection as $data) {
 			if ($data instanceof BundleEntity\StockAttributeValue) {
 				$entity = $data;
@@ -922,9 +922,9 @@ class StockManagementModel extends CoreModel{
 		}
 		if($countInserts > 0){
 			$this->em->flush();
-			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, time());
+			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, microtime(true));
 		}
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -942,12 +942,12 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function insertSuppliers(array $collection){
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
 		$countInserts = 0;
-		$insertedItems = array();
+		$insertedItems = [];
 		foreach($collection as $data){
 			if($data instanceof BundleEntity\Supplier){
 				$entity = $data;
@@ -972,9 +972,9 @@ class StockManagementModel extends CoreModel{
 		}
 		if($countInserts > 0){
 			$this->em->flush();
-			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, time());
+			return new ModelResponse($insertedItems, $countInserts, 0, null, false, 'S:D:003', 'Selected entries have been successfully inserted into database.', $timeStamp, microtime(true));
 		}
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:003', 'One or more entities cannot be inserted into database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -992,12 +992,12 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function updateStockAttributeValues(array $collection){
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
 		$countUpdates = 0;
-		$updatedItems = array();
+		$updatedItems = [];
 		foreach ($collection as $data) {
 			if ($data instanceof BundleEntity\StockAttributeValue) {
 				$entity = $data;
@@ -1065,9 +1065,9 @@ class StockManagementModel extends CoreModel{
 		}
 		if($countUpdates > 0){
 			$this->em->flush();
-			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, time());
+			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, microtime(true));
 		}
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -1085,7 +1085,7 @@ class StockManagementModel extends CoreModel{
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
 	public function updateSuppliers(array $collection){
-		$timeStamp = time();
+		$timeStamp = microtime(true);
 		if (!is_array($collection)) {
 			return $this->createException('InvalidParameterValueException', 'Invalid parameter value. Parameter must be an array collection', 'E:S:001');
 		}
@@ -1115,9 +1115,9 @@ class StockManagementModel extends CoreModel{
 		}
 		if($countUpdates > 0){
 			$this->em->flush();
-			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, time());
+			return new ModelResponse($updatedItems, $countUpdates, 0, null, false, 'S:D:004', 'Selected entries have been successfully updated within database.', $timeStamp, microtime(true));
 		}
-		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, time());
+		return new ModelResponse(null, 0, 0, null, true, 'E:D:004', 'One or more entities cannot be updated within database.', $timeStamp, microtime(true));
 	}
 
 	/**
@@ -1127,8 +1127,8 @@ class StockManagementModel extends CoreModel{
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse|bool
 	 */
-	public function doesStockExistWithQuantity($stock, \integer $quantity, \bool $bypass = false){
-		$timeStamp = time();
+	public function doesStockExistWithQuantity($stock, int $quantity, bool $bypass = false){
+		$timeStamp = microtime(true);
 		$pModel = $this->get('productmanagement.model');
 		$response = $pModel->getStock($stock);
 		if($response->error->exist){
@@ -1136,7 +1136,7 @@ class StockManagementModel extends CoreModel{
 		}
 		$stock = $response->result->set;
 		$column = $this->getEntityDefinition('s', 'alias') . '.stock';
-		$filter = array();
+		$filter = [];
 		$filter[] = array(
 			'glue' => 'and',
 			'condition' => array(
@@ -1166,6 +1166,6 @@ class StockManagementModel extends CoreModel{
 		if ($bypass) {
 			return $exist;
 		}
-		return new ModelResponse(true, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, time());
+		return new ModelResponse(true, 1, 0, null, false, 'S:D:002', 'Entries successfully fetched from database.', $timeStamp, microtime(true));
 	}
 }

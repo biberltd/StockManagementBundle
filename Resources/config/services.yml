@@ -1,4 +1,4 @@
 services:
     stockmanagement.model:
             class:        BiberLtd\Bundle\StockManagementBundle\Services\StockManagementModel
-            arguments:    [@kernel, "default", "doctrine"]
+            arguments:    ["@kernel", "default", "doctrine"]

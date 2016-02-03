@@ -132,7 +132,7 @@ class StockAttributeValue extends CoreEntity
 	 *
 	 * @return $this
 	 */
-	public function setSortOrder(\integer $sort_order) {
+	public function setSortOrder(int $sort_order) {
 		if(!$this->setModified('sort_order', $sort_order)->isModified()) {
 			return $this;
 		}
@@ -152,7 +152,7 @@ class StockAttributeValue extends CoreEntity
 	 *
 	 * @return $this
 	 */
-	public function setValue(\string $value) {
+	public function setValue(string $value) {
 		if(!$this->setModified('value', $value)->isModified()) {
 			return $this;
 		}
