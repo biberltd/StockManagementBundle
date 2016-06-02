@@ -47,7 +47,7 @@ class StockAttributeValue extends CoreEntity
 	/**
 	 * 
 	 * @ORM\JoinColumn(name="attribute", referencedColumnName="id", unique=true, onDelete="CASCADE")
-	 * @ORM\OneToOne(targetEntity="ProductAttribute")
+	 * @ORM\OneToOne(targetEntity="\BiberLtd\Bundle\ProductManagementBundle\Entity\ProductAttribute")
 	 * @var \BiberLtd\Bundle\ProductManagementBundle\Entity\ProductAttribute
 	 */
 	private $attribute;
