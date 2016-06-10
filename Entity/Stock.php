@@ -85,7 +85,7 @@ class Stock extends CoreEntity
     private $discount_price;
 
     /** 
-     * @ORM\ManyToOne(targetEntity="Product")
+     * @ORM\ManyToOne(targetEntity="\BiberLtd\Bundle\ProductManagementBundle\Entity\Product")
      * @ORM\JoinColumn(name="product", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * @var \BiberLtd\Bundle\ProductManagementBundle\Entity\Product
      */
