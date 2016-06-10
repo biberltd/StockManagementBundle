@@ -44,7 +44,7 @@ class Stock extends CoreEntity
 
     /** 
      * @ORM\Column(type="string", length=155, nullable=true)
-     * @vr string
+     * @var string
      */
     private $supplier_sku;
 
