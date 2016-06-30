@@ -574,8 +574,8 @@ class StockManagementModel extends CoreModel{
 		}
 		$oStr = $wStr = $gStr = $fStr = '';
 
-		$qStr = 'SELECT '.$this->entity['s']['alias']
-			.' FROM '.$this->entity['s']['name'].' '.$this->entity['s']['alias'];
+		$qStr = 'SELECT '.$this->entity['sup']['alias']
+			.' FROM '.$this->entity['sup']['name'].' '.$this->entity['sup']['alias'];
 
 		if (!is_null($sortOrder)) {
 			foreach ($sortOrder as $column => $direction) {
