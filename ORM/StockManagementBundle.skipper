@@ -1629,7 +1629,7 @@
       <field name="name" description="Name of supplier." type="string" size="155" required="true" uuid="011a2f10-abe9-42e0-b76e-a025f95afbf8"/>
       <field name="description" description="Description of supplier." type="string" size="255" uuid="30bda892-6641-4a41-84de-3c6ffa3c5d71"/>
       <field name="url_key" description="Url key of supplier." type="string" size="255" required="true" uuid="dac623b6-453a-4098-837c-3dac0d3e41d1"/>
-      <index name="idx_u_supplier_id" unique="true">
+      <index name="idxUSupplierId" unique="true">
         <index-field name="id"/>
       </index>
       <orm-attributes>
@@ -2660,7 +2660,7 @@
     <association uuid="ff2216de-61d6-4b22-940e-9bc8f7199f8a" color="#969696"/>
     <entity uuid="00dd58d4-bd4a-4819-ae17-b995692e4614" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="210" position-y="363" size-x="0" size-x2="132" size-y="0" size-y2="283"/>
     <entity uuid="04602777-d7d4-4b5f-9557-c3a1ba1f9dbb" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="350" position-y="100" size-x="0" size-x2="20" size-y="0" size-y2="20"/>
-    <entity uuid="0587d7e0-3c09-4415-b829-08e6e02da6fb" bg-color="4294967295" hdr-color="4292006610" position-x="377" position-y="250" size-x="0" size-x2="123" size-y="0" size-y2="73"/>
+    <entity uuid="0587d7e0-3c09-4415-b829-08e6e02da6fb" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="377" position-y="250" size-x="0" size-x2="123" size-y="0" size-y2="73"/>
     <entity uuid="062dc364-3d01-474f-8a28-77bb8b1e21fd" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="550" position-y="1" size-x="0" size-x2="130" size-y="0" size-y2="87"/>
     <entity uuid="07eeeac7-da1a-48f5-96c1-665a12f5d84f" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="450" position-y="401" size-x="0" size-x2="125" size-y="0" size-y2="59"/>
     <entity uuid="0b71f735-9ad2-4268-9865-c28389d95af2" bg-color="4294967295" hdr-color="4292006610" position-x="1000" position-y="372" size-x="0" size-x2="109" size-y="0" size-y2="45"/>
@@ -2684,7 +2684,7 @@
     <entity uuid="748abc7a-d12e-4662-b3fd-4631bf01238b" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="399" position-y="686" size-x="0" size-x2="121" size-y="0" size-y2="87"/>
     <entity uuid="7ce99bbb-4d97-4ee5-8703-dfe82e965514" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="100" position-y="94" size-x="0" size-x2="109" size-y="0" size-y2="115"/>
     <entity uuid="7e0d2773-05a0-4e98-84a0-7daf415820df" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="24" position-y="40" size-x="0" size-x2="136" size-y="0" size-y2="45"/>
-    <entity uuid="7fa98806-4f29-472b-ad43-2853b2648925" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="100" position-y="50" size-x="0" size-x2="130" size-y="0" size-y2="129"/>
+    <entity uuid="7fa98806-4f29-472b-ad43-2853b2648925" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="85" position-y="100" size-x="0" size-x2="132" size-y="0" size-y2="185"/>
     <entity uuid="88915b8c-14d5-42f1-a4e4-5d2a31ff96e3" bg-color="4294967295" hdr-color="4292006610" position-x="1450" position-y="50" size-x="0" size-x2="120" size-y="0" size-y2="87"/>
     <entity uuid="9109d3a6-7a5c-4ab9-8ff7-8b5da86662c6" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="50" position-y="401" size-x="0" size-x2="363" size-y="0" size-y2="87"/>
     <entity uuid="9df7cd56-6a97-410f-b0fe-2fd5538bd528" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="350" position-y="51" size-x="0" size-x2="112" size-y="0" size-y2="87"/>
